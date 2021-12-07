@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-12-07 11:27:34 / Modified: 12:00:28" itemprop="dateCreated datePublished" datetime="2021-12-07T11:27:34+08:00">2021-12-07</time>
+              <time title="Created: 2021-12-07 11:27:34 / Modified: 12:03:18" itemprop="dateCreated datePublished" datetime="2021-12-07T11:27:34+08:00">2021-12-07</time>
             </span>
 
           
@@ -186,16 +186,16 @@
       
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前在《IDApro权威指南》上了解过linux的系统调用，知道了int 80h和syscall，当时也没有做深入了解，就以为这两条指令是等价的</p>
 <p>直到最近在钻研汇编，写程序的时候发现原来一直理解错了</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p><img src="int-0x80%E4%B8%8Esyscall/image-20211207113401717.png" alt="image-20211207113401717"></p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p><img src="image-20211207113401717.png" alt="image-20211207113401717"></p>
 <p>我的本意是在终端打印msg，不小心把代码写成了这样，结果db调试时出现了以下报错</p>
-<p><img src="int-0x80%E4%B8%8Esyscall/image-20211207113841956.png" alt="image-20211207113841956"></p>
+<p><img src="image-20211207113841956.png" alt="image-20211207113841956"></p>
 <p>把代码改成这样后，程序成功运行</p>
-<p><img src="int-0x80%E4%B8%8Esyscall/image-20211207113941445.png" alt="image-20211207113941445"></p>
+<p><img src="image-20211207113941445.png" alt="image-20211207113941445"></p>
 <p>于是我意识到了int 80和sycall的区别</p>
 <h2 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h2><p>syscall时linux x86_64进入内核模式的默认方法，这条指令在i386上不可使用，syscall的系统调用号存放在rax中，参数依次存放在rdi，rsi，rdx，rcx，r8和r9中，最多传递六个参数</p>
 <h2 id="int-80h"><a href="#int-80h" class="headerlink" title="int 80h"></a>int 80h</h2><p>int 80h指令可以在i386上使用，程序执行int 80h时就会中断并陷入内核模式，int 80h的系统调用号存放在eax中，参数依次存放在ebx，ecx，edx，esi和edi中，最多传递五个参数</p>
 <h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>通过以上的描述不难看出，syscall和int 80h最大的区别在于传参规则不同，所以如果我们把程序改成这样，还是可以正常运行的，但是不推荐怎么做，x86_64位下还是推荐使用默认的syscall进行系统调用</p>
-<p><img src="int-0x80%E4%B8%8Esyscall/image-20211207120009655.png" alt="image-20211207120009655"></p>
+<p><img src="image-20211207120009655.png" alt="image-20211207120009655"></p>
 
       
     </div>
