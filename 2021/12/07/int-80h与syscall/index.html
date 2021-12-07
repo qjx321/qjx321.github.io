@@ -20,15 +20,24 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/index.html">
+  <meta name="description" content="前言以前在《IDApro权威指南》上了解过linux的系统调用，知道了int 80h和syscall，当时也没有做深入了解，就以为这两条指令是等价的 直到最近在钻研汇编，写程序的时候发现原来一直理解错了 例子 我的本意是在终端打印msg，不小心把代码写成了这样，结果db调试时出现了以下报错  把代码改成这样后，程序成功运行  于是我意识到了int 80和sycall的区别 syscallsysca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="int 80h与syscall">
+<meta property="og:url" content="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言以前在《IDApro权威指南》上了解过linux的系统调用，知道了int 80h和syscall，当时也没有做深入了解，就以为这两条指令是等价的 直到最近在钻研汇编，写程序的时候发现原来一直理解错了 例子 我的本意是在终端打印msg，不小心把代码写成了这样，结果db调试时出现了以下报错  把代码改成这样后，程序成功运行  于是我意识到了int 80和sycall的区别 syscallsysca">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/image-20211207113401717.png">
+<meta property="og:image" content="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/image-20211207113841956.png">
+<meta property="og:image" content="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/image-20211207113941445.png">
+<meta property="og:image" content="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/image-20211207120009655.png">
+<meta property="article:published_time" content="2021-12-07T04:11:51.000Z">
+<meta property="article:modified_time" content="2021-12-07T04:14:35.320Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/image-20211207113401717.png">
 
-<link rel="canonical" href="http://example.com/archives/">
+<link rel="canonical" href="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/">
 
 
 <script id="page-configurations">
@@ -36,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Archive | Hexo</title>
+  <title>int 80h与syscall | Hexo</title>
   
 
 
@@ -139,130 +148,88 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">Um..! 5 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          int 80h与syscall
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-12-07 12:11:51 / Modified: 12:14:35" itemprop="dateCreated datePublished" datetime="2021-12-07T12:11:51+08:00">2021-12-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-07T12:11:51+08:00"
-              content="2021-12-07">
-          12-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/12/07/int-80h%E4%B8%8Esyscall/" itemprop="url">
-            <span itemprop="name">int 80h与syscall</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-07T11:27:34+08:00"
-              content="2021-12-07">
-          12-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/12/07/int-0x80%E4%B8%8Esyscall/" itemprop="url">
-            <span itemprop="name">int 80h与syscall</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-06T21:44:26+08:00"
-              content="2021-12-06">
-          12-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/12/06/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4-loop/" itemprop="url">
-            <span itemprop="name">汇编指令-loop</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-05T22:27:43+08:00"
-              content="2021-12-05">
-          12-05
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/12/05/java%E7%BB%A7%E6%89%BF%E4%B8%8E%E5%A4%9A%E6%80%81/" itemprop="url">
-            <span itemprop="name">java继承与多态</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-04T15:32:55+08:00"
-              content="2021-12-04">
-          12-04
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/12/04/postassembly/" itemprop="url">
-            <span itemprop="name">在ubuntu中使用汇编语言编写程序</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前在《IDApro权威指南》上了解过linux的系统调用，知道了int 80h和syscall，当时也没有做深入了解，就以为这两条指令是等价的</p>
+<p>直到最近在钻研汇编，写程序的时候发现原来一直理解错了</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p><img src="image-20211207113401717.png" alt="image-20211207113401717"></p>
+<p>我的本意是在终端打印msg，不小心把代码写成了这样，结果db调试时出现了以下报错</p>
+<p><img src="image-20211207113841956.png" alt="image-20211207113841956"></p>
+<p>把代码改成这样后，程序成功运行</p>
+<p><img src="image-20211207113941445.png" alt="image-20211207113941445"></p>
+<p>于是我意识到了int 80和sycall的区别</p>
+<h2 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h2><p>syscall时linux x86_64进入内核模式的默认方法，这条指令在i386上不可使用，syscall的系统调用号存放在rax中，参数依次存放在rdi，rsi，rdx，rcx，r8和r9中，最多传递六个参数</p>
+<h2 id="int-80h"><a href="#int-80h" class="headerlink" title="int 80h"></a>int 80h</h2><p>int 80h指令可以在i386上使用，程序执行int 80h时就会中断并陷入内核模式，int 80h的系统调用号存放在eax中，参数依次存放在ebx，ecx，edx，esi和edi中，最多传递五个参数</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>通过以上的描述不难看出，syscall和int 80h最大的区别在于传参规则不同，所以如果我们把程序改成这样，还是可以正常运行的，但是不推荐怎么做，x86_64位下还是推荐使用默认的syscall进行系统调用</p>
+<p><img src="image-20211207120009655.png" alt="image-20211207120009655"></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/07/int-0x80%E4%B8%8Esyscall/" rel="prev" title="int 80h与syscall">
+      <i class="fa fa-chevron-left"></i> int 80h与syscall
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -315,6 +282,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#syscall"><span class="nav-number">3.</span> <span class="nav-text">syscall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#int-80h"><span class="nav-number">4.</span> <span class="nav-text">int 80h</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">区别</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
