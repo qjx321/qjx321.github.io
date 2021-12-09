@@ -145,6 +145,100 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/09/CS-APP-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%BC%AB%E6%B8%B8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/09/CS-APP-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%BC%AB%E6%B8%B8/" class="post-title-link" itemprop="url">CS:APP 第一章 计算机系统漫游</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-12-09 20:51:16 / Modified: 22:33:54" itemprop="dateCreated datePublished" datetime="2021-12-09T20:51:16+08:00">2021-12-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>汇编学的有点过头，就抽空看了一点理论知识，相较于《逆向工程核心原理》，《CS:APP》算是一本很底层的书了，第一张看的很快，因为以前在看《程序员的自我修养》的时候就接触过一些比较底层的知识，学习汇编的过程也免不了和底层打交道</p>
+<p>第一章的标题是“计算机系统漫游”，漫游一词用的很不错，简单介绍了现代操作系统的一些基础知识，但都是泛泛而谈，没有进行深入的展开，我觉得这一章可以划分为三大主题以及两个杂谈</p>
+<p>三大主题：程序的执行过程、CPU的工作原理、操作系统的功能</p>
+<p>两个杂谈：网络通信、并发和并行</p>
+<h2 id="三大主题"><a href="#三大主题" class="headerlink" title="三大主题"></a>三大主题</h2><h3 id="程序的执行过程"><a href="#程序的执行过程" class="headerlink" title="程序的执行过程"></a>程序的执行过程</h3><p>拿一个C程序为例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello world!\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相信这是大部分人入门C语言的第一个程序，但是在那个时候，你只是打出这个程序，然后点击了一下运行键，你并没有了解在你按下运行键之后发生的事</p>
+<p>首先明确一点：CPU是读不懂上面的代码的，CPU能读懂的只能是机器代码，想要CPU执行你写的程序，就必须把你写的代码转换成机器代码，这个过程依赖计算机中的其他程序</p>
+<p>首先，预处理器cpp会根据代码中的以#开头的语句修改源代码，包括广播宏定义和插入头文件，并生成.i文件</p>
+<p>然后，编译器cc1会将.i文件翻译成汇编文件，即.s文件，汇编是一种语言，他与机器语言是一一对应的关系</p>
+<p>接着，汇编器as将汇编语言翻译成机器语言，生成.o文件，.o文件中保存的已经是机器语言，但是CPU任然无法执行它，还需要对其中的外部符号进行重定位</p>
+<p>最后，链接器ld将一个或多个目标文件链接起来，对其中的符号进行重定位，生成可执行文件</p>
+<p>在学习汇编的过程中，经常用到as和ld两个程序，尤其对链接有了更深入的认识</p>
+<p>生成的可执行文件存放在磁盘中，当我们向CPU发送执行程序的指令时，CPU就会将可执行文件加载到内存中，并不是一一对应的加载，这个过程也十分复杂，涉及到可执行文件的装载，不知道这本书后面有没有深入的讲解</p>
+<p>然后CPU就一条一条地读取机器代码并执行，具体过程就是CPU地工作了</p>
+<h3 id="CPU的工作原理"><a href="#CPU的工作原理" class="headerlink" title="CPU的工作原理"></a>CPU的工作原理</h3><p>CPU的核心组件包括寄存器、PC、ALU</p>
+<p>寄存器可以理解为CPU的口袋，CPU会将一些数据存放在寄存器中</p>
+<p>PC可以理解为CPU的眼睛，它指向CPU即将要执行的一条指令</p>
+<p>ALU时CPU的大脑，负责进行数据的运算</p>
+<p>CPU的工作模式可以简单地概括为<strong>读取指令——&gt;执行指令</strong></p>
+<p>第一步：读取指令，为了进行这一步，CPu还会进行一些准备工作，即将指令和数据从磁盘传输到主存中，这样做没别的意思，就是为了提高指令和数据的读取速度，现代处理器的运算速度是很快的，但是如果读取数据和指令的速度跟不上，再快的处理器发挥不了全部实力，事实上，为了获得更快的读取速度，现代计算机还发展出了高速缓存，其读取速度比内存更快</p>
+<p>对于整个程序，CPU是将其读取到主存或高速缓存中，而对于更小单位的指令和数据，CPU会将他们读取到寄存器中，寄存器的读取速度就更快了</p>
+<p>第二部：执行指令，这个步骤的含义很广泛，因为指令的类型多种多样，大概意思就是CPU会根据指令做相应的事情，这些事情则是更加底层的操作了</p>
+<h3 id="操作系统的功能"><a href="#操作系统的功能" class="headerlink" title="操作系统的功能"></a>操作系统的功能</h3><p>操作系统介于软件与硬件之间，它的作用在我看来无非两个：保护硬件、合理调度计算机的资源</p>
+<h4 id="保护硬件"><a href="#保护硬件" class="headerlink" title="保护硬件"></a>保护硬件</h4><p>事实上，早期的操作系统貌似并没有这个功能，在DOS系统下，应用程序与操作系统的级别是相同的，后来保护模式的出现将应用程序的级别划分为R3，而操作系统的级别则是R0，在保护模式下，应用程序对硬件的操作必须由操作系统代劳，如果操作系统觉得应用程序不能这么做，它可以选择驳回请求</p>
+<p>这样的模式就起到了保护硬件的作用，让计算机不至于那么脆弱</p>
+<h4 id="合理调度计算机资源"><a href="#合理调度计算机资源" class="headerlink" title="合理调度计算机资源"></a>合理调度计算机资源</h4><p>应用程序的运行都是消耗资源的，如果没有一个调度者来合理分配资源，不同的应用程序极可能发生争抢资源的事件，这不仅会拖慢计算机的运行速度，还可能引发计算机崩溃</p>
+<p>操作系统会根据一定的规则分配计算机的资源，以期达到速度最大化的目的，这又是更深的学问了，涉及操作系统如何调度的问题，放在以后再讲</p>
+<h2 id="两个杂谈"><a href="#两个杂谈" class="headerlink" title="两个杂谈"></a>两个杂谈</h2><p>为什么叫杂谈，因为我觉得这两部分作者似乎只是轻点了一下，远没有三个主题讲的详细，或许作者有自己的打算，所以我也只是随便写一点东西</p>
+<h3 id="网络通信"><a href="#网络通信" class="headerlink" title="网络通信"></a>网络通信</h3><p>我对网络通信也不太了解，而且作者讲的也不多，我的理解是，网络通信可以概括为远程服务器与客户端的通信，客户端向服务器发送请求，服务器根据请求做出相应的处理，然后把处理的结果发送给客户端，客户端和服务器都可以是多对多的模式，服务器与服务器连接，客户端与服务器连接，客户端通过服务器与客户端连接，形成一张网络</p>
+<h3 id="并发与并行"><a href="#并发与并行" class="headerlink" title="并发与并行"></a>并发与并行</h3><p>书中将并发与并行分为了三个层次：线程级并发、指令级并行、单指令、多数据并行</p>
+<p>线程级开发和指令级并行的概念我觉得差不多，只是针对的主体不同</p>
+<p>对于单核处理器来说，并发都是伪并发，对于多核处理器来说，存在伪并发，也存在真并发，真并发模式下，一个核心只处理一个线程，伪并发模式下，一个核心可能会处理多个线程，只是核心会快速地在线程之间来回切换，以达到让你误以为每个线程都一直在执行一样，切换的过程中，线程有三种状态：运行、等待、就绪，这里也不做详细说明了，因为书上也没讲，我是在《程序员的自我修养》上看到的</p>
+<p>指令级并发与线程级并发差不太多，CPU会把指令继续分解为更小的步骤，工作模式与线程级并发是几乎一样的</p>
+<p>单指令，多数据并行我不太了解，书中也没有详细的原理解释，还是往后看吧，书上说第五章做了详细的说明</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/09/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4movs-lods-stos-rep/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -706,7 +800,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
