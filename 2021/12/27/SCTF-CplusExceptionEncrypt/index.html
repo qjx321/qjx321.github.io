@@ -20,28 +20,38 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="一道cpp异常处理的题目  用ida打开，找到main函数反编译，题目没有去符号，所以可以很快看出是一道考察C++异常处理机制的题目 由于catch块在伪代码中不可见，所以我们还是看汇编吧  这里的三个catch块出现了delta，sum的符号，推测大概率是tea加密  这两个catch块出现了key和roundkey，推测是aes加密 接下来就调试验证猜想： 调试之前在每个catch块下断点，防">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SCTF CplusExceptionEncrypt">
+<meta property="og:url" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一道cpp异常处理的题目  用ida打开，找到main函数反编译，题目没有去符号，所以可以很快看出是一道考察C++异常处理机制的题目 由于catch块在伪代码中不可见，所以我们还是看汇编吧  这里的三个catch块出现了delta，sum的符号，推测大概率是tea加密  这两个catch块出现了key和roundkey，推测是aes加密 接下来就调试验证猜想： 调试之前在每个catch块下断点，防">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/image-20211227204410904.png">
+<meta property="og:image" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/image-20211227205244623.png">
+<meta property="og:image" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/image-20211227205427880.png">
+<meta property="og:image" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/image-20211227205936116.png">
+<meta property="og:image" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/image-20211227210501020.png">
+<meta property="article:published_time" content="2021-12-27T12:39:55.000Z">
+<meta property="article:modified_time" content="2021-12-27T13:41:19.435Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/image-20211227204410904.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Hexo</title>
+  <title>SCTF CplusExceptionEncrypt | Hexo</title>
   
 
 
@@ -139,9 +149,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -157,10 +168,9 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/27/SCTF-CplusExceptionEncrypt/" class="post-title-link" itemprop="url">SCTF CplusExceptionEncrypt</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          SCTF CplusExceptionEncrypt
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -184,7 +194,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>一道cpp异常处理的题目</p>
+        <p>一道cpp异常处理的题目</p>
 <p><img src="image-20211227204410904.png" alt="image-20211227204410904"></p>
 <p>用ida打开，找到main函数反编译，题目没有去符号，所以可以很快看出是一道考察C++异常处理机制的题目</p>
 <p>由于catch块在伪代码中不可见，所以我们还是看汇编吧</p>
@@ -218,789 +228,31 @@
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>cpp异常早有接触，但是魔改的aes还是第一次逆，花了比较多的时间</p>
 <p>这次比赛的心得体会就是：自己还是太菜了，代码能力有点差，对aes的掌握不够熟练，后续计划把常见的加密算法的常规脚本都写一遍，打比赛的时候就不用造轮子了，可以节省很多时间</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/22/BombLab/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/22/BombLab/" class="post-title-link" itemprop="url">BombLab</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-12-22 15:43:32" itemprop="dateCreated datePublished" datetime="2021-12-22T15:43:32+08:00">2021-12-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-27 21:44:50" itemprop="dateModified" datetime="2021-12-27T21:44:50+08:00">2021-12-27</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="phase-1"><a href="#phase-1" class="headerlink" title="phase_1"></a>phase_1</h2><p>使用gdb调试，提示输入后，随便输一个“123\n”</p>
-<p>跟进read_line函数，在这里先使用scansb得到了输入的长度，然后进行比较，长度小于等于0x4e就跳转到read_line+252地址</p>
-<p><img src="image-20211222154811775.png" alt="image-20211222154811775"></p>
-<p>跳转之后不久，就来到了ret，函数返回后观察返回值是“123”，由此判断read_line函数还去掉了输入结尾的回车符</p>
-<p><img src="image-20211222155552687.png" alt="image-20211222155552687"></p>
-<p>接下来就是调用phase_1,继续跟进</p>
-<p><img src="image-20211222155700433.png" alt="image-20211222155700433"></p>
-<p>phase_1的代码很短，调用了一个string_not_equal函数，然后比较返回值是否为0，不为零则调用explode_bomb函数，顾名思义，调用这个函数就寄了</p>
-<p><img src="image-20211222155858898.png" alt="image-20211222155858898"></p>
-<p>这是string_not_equal函数的两个参数，rdi为我们的输入，rsi是一个固定字符串，大概这就是第一关的答案吧</p>
-<p>“Border relations with Canada have never been better.”<img src="image-20211222160335963.png" alt="image-20211222160335963"></p>
-<p>跟进string_not_equal函数，首先获取两个字符串的长度，然后比较，不相等就直接返回1，前面说到过，如果函数的返回值不为0就寄了</p>
-<p><img src="image-20211222160715010.png" alt="image-20211222160715010"></p>
-<p>我们复制一下这个固定的字符串，并把它作为输入，在次运行到这个位置，这一次跳转就不执行了，继续往下调试</p>
-<p><img src="image-20211222161025712.png" alt="image-20211222161025712"></p>
-<p>再后面就是一个循环，一个字节一个字节地比较，如果全部相等就返回0，phase_1就通过了</p>
-<p><img src="image-20211222161458388.png" alt="image-20211222161458388"></p>
-<p><img src="image-20211222161625982.png" alt="image-20211222161625982"></p>
-<h2 id="phase-2"><a href="#phase-2" class="headerlink" title="phase_2"></a>phase_2</h2><p>也是差不多的套路，读取输入然后验证，一路跟进到read_six_nums函数，发现一个关键位置，调用sscanf函数，如果返回值小于等于5，就调用explode_bomb函数，sscanf函数的返回值就是它读取的字符的个数，所以在这里我们试着输六个数字</p>
-<p><img src="image-20211222162138650.png" alt="image-20211222162138650"></p>
-<p>根据格式化字符串，每个数字之间都要有空格，我们输入“1 2 3 4 5 6”试一试，成功跳过去了</p>
-<p><img src="image-20211222163527441.png" alt="image-20211222163527441"></p>
-<p><img src="image-20211222163620929.png" alt="image-20211222163620929"></p>
-<p>从read_six_numbers函数中返回后，开始检测这六个数是否符合要求，</p>
-<p><img src="image-20211222164458090.png" alt="image-20211222164458090"></p>
-<p>仔细分析一下汇编代码，写好注释，得出算法为：第一个数字为1，然后后面的数字必须是前面数字地两倍,所以第二层的答案应该是</p>
-<p>1 2 4 8 16 32</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">0x0000000000400f0a &lt;+14&gt;:    cmp    DWORD PTR [rsp],0x1           判断第一个数是否为1</span><br><span class="line"> 0x0000000000400f0e &lt;+18&gt;:    je     0x400f30 &lt;phase_2+52&gt;        不是1就寄</span><br><span class="line"> 0x0000000000400f10 &lt;+20&gt;:    call   0x40143a &lt;explode_bomb&gt;      </span><br><span class="line"> 0x0000000000400f15 &lt;+25&gt;:    jmp    0x400f30 &lt;phase_2+52&gt;</span><br><span class="line"> 0x0000000000400f17 &lt;+27&gt;:    mov    eax,DWORD PTR [rbx-0x4]      取前一个数字</span><br><span class="line"> 0x0000000000400f1a &lt;+30&gt;:    add    eax,eax                      乘以2</span><br><span class="line"> 0x0000000000400f1c &lt;+32&gt;:    cmp    DWORD PTR [rbx],eax          比较乘以2的数字与后面一个数字</span><br><span class="line"> 0x0000000000400f1e &lt;+34&gt;:    je     0x400f25 &lt;phase_2+41&gt;        不等于就寄</span><br><span class="line"> 0x0000000000400f20 &lt;+36&gt;:    call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line"> 0x0000000000400f25 &lt;+41&gt;:    add    rbx,0x4                      数字往后推一位</span><br><span class="line"> 0x0000000000400f29 &lt;+45&gt;:    cmp    rbx,rbp                      判断是否比较完成</span><br><span class="line"> 0x0000000000400f2c &lt;+48&gt;:    jne    0x400f17 &lt;phase_2+27&gt;</span><br><span class="line"> 0x0000000000400f2e &lt;+50&gt;:    jmp    0x400f3c &lt;phase_2+64&gt;</span><br><span class="line"> 0x0000000000400f30 &lt;+52&gt;:    lea    rbx,[rsp+0x4]                取输入数字的地址</span><br><span class="line"> 0x0000000000400f35 &lt;+57&gt;:    lea    rbp,[rsp+0x18]               数字的个数</span><br><span class="line"> 0x0000000000400f3a &lt;+62&gt;:    jmp    0x400f17 &lt;phase_2+27&gt;</span><br><span class="line"> 0x0000000000400f3c &lt;+64&gt;:    add    rsp,0x28</span><br><span class="line"> 0x0000000000400f40 &lt;+68&gt;:    pop    rbx</span><br><span class="line"> 0x0000000000400f41 &lt;+69&gt;:    pop    rbp</span><br><span class="line"> 0x0000000000400f42 &lt;+70&gt;:    ret</span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211222165623400.png" alt="image-20211222165623400"></p>
-<h2 id="phase-3"><a href="#phase-3" class="headerlink" title="phase_3"></a>phase_3</h2><p>phase_3的代码如下，首先调用了sscanf函数，格式化字符串是“%d %d”，所以phase_3应该输入两个整数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">=&gt; 0x0000000000400f43 &lt;+0&gt;:     sub    rsp,0x18</span><br><span class="line">   0x0000000000400f47 &lt;+4&gt;:     lea    rcx,[rsp+0xc]</span><br><span class="line">   0x0000000000400f4c &lt;+9&gt;:     lea    rdx,[rsp+0x8]</span><br><span class="line">   0x0000000000400f51 &lt;+14&gt;:    mov    esi,0x4025cf</span><br><span class="line">   0x0000000000400f56 &lt;+19&gt;:    mov    eax,0x0</span><br><span class="line">   0x0000000000400f5b &lt;+24&gt;:    call   0x400bf0 &lt;__isoc99_sscanf@plt&gt;</span><br><span class="line">   0x0000000000400f60 &lt;+29&gt;:    cmp    eax,0x1  						返回值不是1就寄</span><br><span class="line">   0x0000000000400f63 &lt;+32&gt;:    jg     0x400f6a &lt;phase_3+39&gt;</span><br><span class="line">   0x0000000000400f65 &lt;+34&gt;:    call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x0000000000400f6a &lt;+39&gt;:    cmp    DWORD PTR [rsp+0x8],0x7			 第一个数字大于7就寄</span><br><span class="line">   0x0000000000400f6f &lt;+44&gt;:    ja     0x400fad &lt;phase_3+106&gt;</span><br><span class="line">   0x0000000000400f71 &lt;+46&gt;:    mov    eax,DWORD PTR [rsp+0x8]			</span><br><span class="line">   0x0000000000400f75 &lt;+50&gt;:    jmp    QWORD PTR [rax*8+0x402470]		 这里类似一个switch-case，根据第一个数字的值进 行跳转</span><br><span class="line">   0x0000000000400f7c &lt;+57&gt;:    mov    eax,0xcf</span><br><span class="line">   0x0000000000400f81 &lt;+62&gt;:    jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400f83 &lt;+64&gt;:    mov    eax,0x2c3</span><br><span class="line">   0x0000000000400f88 &lt;+69&gt;:    jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400f8a &lt;+71&gt;:    mov    eax,0x100</span><br><span class="line">   0x0000000000400f8f &lt;+76&gt;:    jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400f91 &lt;+78&gt;:    mov    eax,0x185</span><br><span class="line">   0x0000000000400f96 &lt;+83&gt;:    jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400f98 &lt;+85&gt;:    mov    eax,0xce</span><br><span class="line">   0x0000000000400f9d &lt;+90&gt;:    jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400f9f &lt;+92&gt;:    mov    eax,0x2aa</span><br><span class="line">   0x0000000000400fa4 &lt;+97&gt;:    jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400fa6 &lt;+99&gt;:    mov    eax,0x147</span><br><span class="line">   0x0000000000400fab &lt;+104&gt;:   jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400fad &lt;+106&gt;:   call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x0000000000400fb2 &lt;+111&gt;:   mov    eax,0x0</span><br><span class="line">   0x0000000000400fb7 &lt;+116&gt;:   jmp    0x400fbe &lt;phase_3+123&gt;</span><br><span class="line">   0x0000000000400fb9 &lt;+118&gt;:   mov    eax,0x137</span><br><span class="line">   0x0000000000400fbe &lt;+123&gt;:   cmp    eax,DWORD PTR [rsp+0xc]			比较eax和第二个数字，eax在前面被复制，依据的是第一个数字的值</span><br><span class="line">   0x0000000000400fc2 &lt;+127&gt;:   je     0x400fc9 &lt;phase_3+134&gt;			不相等就寄</span><br><span class="line">   0x0000000000400fc4 &lt;+129&gt;:   call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x0000000000400fc9 &lt;+134&gt;:   add    rsp,0x18</span><br><span class="line">   0x0000000000400fcd &lt;+138&gt;:   ret</span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211222165925279.png" alt="image-20211222165925279"></p>
-<p>这里我第一个数字输的是1，对应的是给eax赋值为0x137，所以1 311是一组答案</p>
-<p><img src="image-20211222171401828.png" alt="image-20211222171401828"></p>
-<p>这里存放着跳转表，对比汇编代码即可得出8组正确的答案，任意输入一组可以通过</p>
-<p><img src="image-20211222172100372.png" alt="image-20211222172100372"></p>
-<p><img src="image-20211222172238703.png" alt="image-20211222172238703"></p>
-<h2 id="phase-4"><a href="#phase-4" class="headerlink" title="phase_4"></a>phase_4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">=&gt; 0x000000000040100c &lt;+0&gt;:     sub    rsp,0x18</span><br><span class="line">   0x0000000000401010 &lt;+4&gt;:     lea    rcx,[rsp+0xc]</span><br><span class="line">   0x0000000000401015 &lt;+9&gt;:     lea    rdx,[rsp+0x8]</span><br><span class="line">   0x000000000040101a &lt;+14&gt;:    mov    esi,0x4025cf</span><br><span class="line">   0x000000000040101f &lt;+19&gt;:    mov    eax,0x0</span><br><span class="line">   0x0000000000401024 &lt;+24&gt;:    call   0x400bf0 &lt;__isoc99_sscanf@plt&gt;</span><br><span class="line">   0x0000000000401029 &lt;+29&gt;:    cmp    eax,0x2						如果输入不是两个整数就寄</span><br><span class="line">   0x000000000040102c &lt;+32&gt;:    jne    0x401035 &lt;phase_4+41&gt;</span><br><span class="line">   0x000000000040102e &lt;+34&gt;:    cmp    DWORD PTR [rsp+0x8],0xe		  第一个整数大于0xe就寄</span><br><span class="line">   0x0000000000401033 &lt;+39&gt;:    jbe    0x40103a &lt;phase_4+46&gt;</span><br><span class="line">   0x0000000000401035 &lt;+41&gt;:    call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x000000000040103a &lt;+46&gt;:    mov    edx,0xe</span><br><span class="line">   0x000000000040103f &lt;+51&gt;:    mov    esi,0x0</span><br><span class="line">   0x0000000000401044 &lt;+56&gt;:    mov    edi,DWORD PTR [rsp+0x8]</span><br><span class="line">   0x0000000000401048 &lt;+60&gt;:    call   0x400fce &lt;func4&gt;				 func4(第一个整数, 0, 0xe);	</span><br><span class="line">   0x000000000040104d &lt;+65&gt;:    test   eax,eax						返回值不为0就寄</span><br><span class="line">   0x000000000040104f &lt;+67&gt;:    jne    0x401058 &lt;phase_4+76&gt;		</span><br><span class="line">   0x0000000000401051 &lt;+69&gt;:    cmp    DWORD PTR [rsp+0xc],0x0		  第二个整数不为0就寄</span><br><span class="line">   0x0000000000401056 &lt;+74&gt;:    je     0x40105d &lt;phase_4+81&gt;</span><br><span class="line">   0x0000000000401058 &lt;+76&gt;:    call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x000000000040105d &lt;+81&gt;:    add    rsp,0x18</span><br><span class="line">   0x0000000000401061 &lt;+85&gt;:    ret</span><br></pre></td></tr></table></figure>
-
-<p>还是调用sscanf函数，还是两个整数</p>
-<p><img src="image-20211222172641614.png" alt="image-20211222172641614"></p>
-<p>这是func4函数的代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">0x0000000000400fce &lt;+0&gt;:     sub    rsp,0x8</span><br><span class="line">0x0000000000400fd2 &lt;+4&gt;:     mov    eax,edx				eax存放着整数的个数2</span><br><span class="line">0x0000000000400fd4 &lt;+6&gt;:     sub    eax,esi				esi存放着0，eax-0 = eax</span><br><span class="line">0x0000000000400fd6 &lt;+8&gt;:     mov    ecx,eax				结果放到ecx</span><br><span class="line">0x0000000000400fd8 &lt;+10&gt;:    shr    ecx,0x1f				取ecx的符号位</span><br><span class="line">0x0000000000400fdb &lt;+13&gt;:    add    eax,ecx</span><br><span class="line">0x0000000000400fdd &lt;+15&gt;:    sar    eax,1</span><br><span class="line">0x0000000000400fdf &lt;+17&gt;:    lea    ecx,[rax+rsi*1]</span><br><span class="line">0x0000000000400fe2 &lt;+20&gt;:    cmp    ecx,edi</span><br><span class="line">0x0000000000400fe4 &lt;+22&gt;:    jle    0x400ff2 &lt;func4+36&gt;</span><br><span class="line">0x0000000000400fe6 &lt;+24&gt;:    lea    edx,[rcx-0x1]</span><br><span class="line">0x0000000000400fe9 &lt;+27&gt;:    call   0x400fce &lt;func4&gt;</span><br><span class="line">0x0000000000400fee &lt;+32&gt;:    add    eax,eax</span><br><span class="line">0x0000000000400ff0 &lt;+34&gt;:    jmp    0x401007 &lt;func4+57&gt;</span><br><span class="line">0x0000000000400ff2 &lt;+36&gt;:    mov    eax,0x0</span><br><span class="line">0x0000000000400ff7 &lt;+41&gt;:    cmp    ecx,edi</span><br><span class="line">0x0000000000400ff9 &lt;+43&gt;:    jge    0x401007 &lt;func4+57&gt;</span><br><span class="line">0x0000000000400ffb &lt;+45&gt;:    lea    esi,[rcx+0x1]</span><br><span class="line">0x0000000000400ffe &lt;+48&gt;:    call   0x400fce &lt;func4&gt;</span><br><span class="line">0x0000000000401003 &lt;+53&gt;:    lea    eax,[rax+rax*1+0x1]</span><br><span class="line">0x0000000000401007 &lt;+57&gt;:    add    rsp,0x8</span><br><span class="line">0x000000000040100b &lt;+61&gt;:    ret</span><br></pre></td></tr></table></figure>
+        
 
 
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/22/BombLab/" rel="prev" title="BombLab">
+      <i class="fa fa-chevron-left"></i> BombLab
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/18/%E6%AF%8F%E5%91%A8%E6%91%86%E7%83%82%E6%83%85%E5%86%B5%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/18/%E6%AF%8F%E5%91%A8%E6%91%86%E7%83%82%E6%83%85%E5%86%B5%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">每周摆烂情况总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-18 20:10:17 / Modified: 20:17:40" itemprop="dateCreated datePublished" datetime="2021-12-18T20:10:17+08:00">2021-12-18</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h2><p>已经学到SSE指令了，目前会编写简单的汇编程序，在学汇编的同时，了解了一些汇编和链接的知识</p>
-<h2 id="CSAPP"><a href="#CSAPP" class="headerlink" title="CSAPP"></a>CSAPP</h2><p>看完了第二章，第三章看了两节，随书的Lab做了DataLab</p>
-<h2 id="刷题"><a href="#刷题" class="headerlink" title="刷题"></a>刷题</h2><p>buu写了两道简单逆向题，约等于没写（寄）</p>
-<h2 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h2><p>在PAT上刷题，感觉对自己来说有点吃力，看来平时代码写少了</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>捣鼓了一下wsl，挺好用的</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/17/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4SSE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/17/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4SSE/" class="post-title-link" itemprop="url">汇编指令SSE</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-17 13:10:15 / Modified: 13:52:48" itemprop="dateCreated datePublished" datetime="2021-12-17T13:10:15+08:00">2021-12-17</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>早几天看CSAPP的时候，接触到一个“单指令多数据并行”的概念，那个时候还不知道这是什么东西，没想到今天学汇编就学到了</p>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>先看一个小的汇编程序：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">.section .data</span><br><span class="line">.align 16</span><br><span class="line">value1:</span><br><span class="line">    .float 45.29, 13.13, 23.2, 97.54</span><br><span class="line">value2:</span><br><span class="line">    .float 44.444, 22.4, 60.94, -10.86</span><br><span class="line">.section .bss</span><br><span class="line">    .lcomm result, 16</span><br><span class="line">.section .text</span><br><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">    nop</span><br><span class="line">    movaps value1, %xmm0</span><br><span class="line">    movaps value2, %xmm1</span><br><span class="line"></span><br><span class="line">    addps %xmm1, %xmm0</span><br><span class="line">    sqrtps %xmm0, %xmm0</span><br><span class="line">    maxps %xmm1, %xmm0</span><br><span class="line">    movaps %xmm0, result</span><br><span class="line"></span><br><span class="line">    movq $60, %rax</span><br><span class="line">    movq $0, %rbx</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>第二行的.align 16是在进行内存对齐，因为movaps指令要求操作数的内存与16对齐，否则会报段错误，以前写pwn题的时候还被这东西坑过，现在终于更进一步了解为什么需要对齐了</p>
-<p>我们定义了两组数据：value1和value2，他们都包含四个float类型的浮点数</p>
-<p>xmm0和xmm1是两个特殊的寄存器，他们的功能接下来会讲到</p>
-<p>这些指令很眼熟，其实他们的功能和去掉ps差不多</p>
-<p>下面汇编并链接这个程序，再使用gdb调试来仔细分析程序的行为</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> as -o example.o example.s</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ld -o example example.o</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> gdb example</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> b _start</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> r</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211217132656476.png" alt="image-20211217132656476"></p>
-<p>程序断在了nop，即text段的第一条指令处</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">print</span> <span class="variable">$xmm0</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">print</span> <span class="variable">$xmm1</span></span></span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211217132838626.png" alt="image-20211217132838626"></p>
-<p>我们打印xmm0和xmm1寄存器中的值，可以看到其中还都是零，接下来我们运行到addps指令处，再打印其中的值</p>
-<p><img src="image-20211217133138017.png" alt="image-20211217133138017"></p>
-<p>由于浮点数无法精确地表示，所以这些值都是我们初始化值的近似值，可以看到：xmm0保存着value1的值，xmm1保存着value2的值</p>
-<p>在这里，我们只使用一条指令就完成了四个值的传递，这就是单指令多数据并行的一种表现形式</p>
-<p>下面继续执行addps指令，看看内存会发生什么变化</p>
-<p><img src="image-20211217133704772.png" alt="image-20211217133704772"></p>
-<p>xmm0中保存了两个寄存器相加的值，相加的规则是对应位置相加，在这里，一条add指令就完成了四对数据的加法</p>
-<p>再往后不需要调试也能推测一番了，aqrtps用于计算四个数各自的平方根，maxps用于选出操作数中较大的哪一个，接着movaps将其放入result内存中，然后程序就调用exit退出了</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这些后缀带ps的指令就是SSE指令，这些指令提供了对单精度浮点数的SIMD支持，SIMD就是“单指令多数据并行”</p>
-<p>xmm寄存器相当于一个多数据包，将数据传入xmm寄存器可以看作是打包数据，打包后的数据是可以使用单一指令同时操作的，将数据从xmm寄存器传入内存可以看成是对数据包的解包</p>
-<p>SSE指令远不止这几条，但是只要了解原理其他的都好说，有兴趣的可以自己去查阅相关资料</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/13/CSAPP-%E7%AC%AC%E4%BA%8C%E7%AB%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/CSAPP-%E7%AC%AC%E4%BA%8C%E7%AB%A0/" class="post-title-link" itemprop="url">CSAPP 第二章</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-12-13 21:08:46" itemprop="dateCreated datePublished" datetime="2021-12-13T21:08:46+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-14 22:10:01" itemprop="dateModified" datetime="2021-12-14T22:10:01+08:00">2021-12-14</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="信息储存"><a href="#信息储存" class="headerlink" title="信息储存"></a>信息储存</h2><h3 id="进制"><a href="#进制" class="headerlink" title="进制"></a>进制</h3><p>日常生活中，我们习惯使用十进制，但是计算机领域使用最多的当属十六进制，并不是说计算机能读懂十六进制，计算机只能都懂二进制，但是十六进制和二进制的转换很方便，所以人们通常把计算机中的二进制数据转换为十六进制</p>
-<h3 id="字和字节"><a href="#字和字节" class="headerlink" title="字和字节"></a>字和字节</h3><p>计算机能处理的最小数据单位就是字节，字一般是二字节或者四字节，这个在不同的机器上不同，每台计算机都有自己的字长，实际上字长就是该机器指针的长度，也就是地址的长度，字长越大的机器，寻址能力也就越强</p>
-<h3 id="字节顺序"><a href="#字节顺序" class="headerlink" title="字节顺序"></a>字节顺序</h3><p>分为小端和大端，最近也出现了双端的字节序，但是最常见的还是小端，小端的含义就是，数据的存储按原始数据的高位存储在内存的高地址，原始数据的低位存放在内存的低位，通俗的说法是，你会发现内存中的数据是反过来存放的</p>
-<p>大端和小端都有各自的优点，具体使用那一种字节序只是习惯问题</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>C语言中字符串以0结尾，定义字符串时，C的编译器会默认在字符串的结尾加上一个0，否则可能会发生意想不到的错误</p>
-<p>常见的字符集有ascii和unicode两种，ascii使用16为，也就是两个字节来表示字符，而unicode使用32为，也就是四个字节来表示字符</p>
-<p>ascii对英文字母有较好的支持，而unicode支持的范围更加广泛</p>
-<h3 id="bool运算"><a href="#bool运算" class="headerlink" title="bool运算"></a>bool运算</h3><p>狭义的bool代数就是0和1的运算，C语言规定了按位与、按位或、取反、异或四种bool运算</p>
-<p>按位与：参与运算的两位都是1结果才为1，否则为0</p>
-<p>按位或：参与运算的两位都是0结果才为0，否则为1</p>
-<p>取反：1取反为0，0取反为1</p>
-<p>异或：参与运算的两位只有一位为1结果才为1，否则为0</p>
-<p>这四种运算都有一定的特性，如可以让一个数按位与0xFF将其高位全部置0，或者让一个数按位或0xFF使其低16为全部置1</p>
-<p>异或的特性包括：一个数异或自己得零，一个数异或0得自己，一个数异或另外一个数偶数次，结果还是这个数</p>
-<h3 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h3><p>C语言规定了逻辑与（&amp;&amp;），逻辑或（||），和逻辑非（！）</p>
-<p>在逻辑运算看来，非0的所有数都是1，1&amp;&amp;1 = 1，1&amp;&amp;0 = 0，0&amp;&amp;0 = 0</p>
-<p>1||1 = 1，1||0 = 1， 0||0 = 0，！1 = 0， ！0 = 1</p>
-<h3 id="移位运算"><a href="#移位运算" class="headerlink" title="移位运算"></a>移位运算</h3><p>C语言中有左移，逻辑右移和算数右移</p>
-<p>逻辑右移在左边置0，算术右移在左边置符号位</p>
-<h2 id="整数表示"><a href="#整数表示" class="headerlink" title="整数表示"></a>整数表示</h2><p>在C语言中，整数分为有符号数和无符号数，C语言的整数默认使用补码表示的，无符号数的所有位都是数值位，有符号数的最高位表示符号位，0为负数，1为整数，负数的补码是该书绝对值的补码取反再加一</p>
-<p>编程时，应当尽量避免无符号的使用，由于存在隐式的转换，使用无符号数在某些时候可能导致难以察觉的错误</p>
-<h2 id="整数运算"><a href="#整数运算" class="headerlink" title="整数运算"></a>整数运算</h2><p>大寄</p>
-<p>我其实也是迷迷糊糊看过去的，就记住一个吧，C语言中整数的运算时会溢出的</p>
-<p>还有就是整数的乘法和除法有的情况可以采用移位来进行优化</p>
-<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><p>就简单看了一下浮点数的表示，浮点数由三部分所组成：最高位是符号位，中间的exp是阶码，代表2的多少次幂，最后一部分是尾数</p>
-<p>浮点数的表示形式就是（-1）**s * 尾数*2**阶码</p>
-<p><img src="image-20211214220217692.png" alt="image-20211214220217692"></p>
-<p>注意：浮点数不能准确地表示所有小数</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>第二章就这些，了解了整数和浮点数的表示，在内存中的存储方式以及使用的时候应该注意些什么</p>
-<p>寄，牵扯到数学运算我就寄，太菜了</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/09/CS-APP-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%BC%AB%E6%B8%B8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/09/CS-APP-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%BC%AB%E6%B8%B8/" class="post-title-link" itemprop="url">CS:APP 第一章 计算机系统漫游</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-09 20:51:16 / Modified: 22:33:54" itemprop="dateCreated datePublished" datetime="2021-12-09T20:51:16+08:00">2021-12-09</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>汇编学的有点过头，就抽空看了一点理论知识，相较于《逆向工程核心原理》，《CS:APP》算是一本很底层的书了，第一张看的很快，因为以前在看《程序员的自我修养》的时候就接触过一些比较底层的知识，学习汇编的过程也免不了和底层打交道</p>
-<p>第一章的标题是“计算机系统漫游”，漫游一词用的很不错，简单介绍了现代操作系统的一些基础知识，但都是泛泛而谈，没有进行深入的展开，我觉得这一章可以划分为三大主题以及两个杂谈</p>
-<p>三大主题：程序的执行过程、CPU的工作原理、操作系统的功能</p>
-<p>两个杂谈：网络通信、并发和并行</p>
-<h2 id="三大主题"><a href="#三大主题" class="headerlink" title="三大主题"></a>三大主题</h2><h3 id="程序的执行过程"><a href="#程序的执行过程" class="headerlink" title="程序的执行过程"></a>程序的执行过程</h3><p>拿一个C程序为例子：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello world!\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>相信这是大部分人入门C语言的第一个程序，但是在那个时候，你只是打出这个程序，然后点击了一下运行键，你并没有了解在你按下运行键之后发生的事</p>
-<p>首先明确一点：CPU是读不懂上面的代码的，CPU能读懂的只能是机器代码，想要CPU执行你写的程序，就必须把你写的代码转换成机器代码，这个过程依赖计算机中的其他程序</p>
-<p>首先，预处理器cpp会根据代码中的以#开头的语句修改源代码，包括广播宏定义和插入头文件，并生成.i文件</p>
-<p>然后，编译器cc1会将.i文件翻译成汇编文件，即.s文件，汇编是一种语言，他与机器语言是一一对应的关系</p>
-<p>接着，汇编器as将汇编语言翻译成机器语言，生成.o文件，.o文件中保存的已经是机器语言，但是CPU任然无法执行它，还需要对其中的外部符号进行重定位</p>
-<p>最后，链接器ld将一个或多个目标文件链接起来，对其中的符号进行重定位，生成可执行文件</p>
-<p>在学习汇编的过程中，经常用到as和ld两个程序，尤其对链接有了更深入的认识</p>
-<p>生成的可执行文件存放在磁盘中，当我们向CPU发送执行程序的指令时，CPU就会将可执行文件加载到内存中，并不是一一对应的加载，这个过程也十分复杂，涉及到可执行文件的装载，不知道这本书后面有没有深入的讲解</p>
-<p>然后CPU就一条一条地读取机器代码并执行，具体过程就是CPU地工作了</p>
-<h3 id="CPU的工作原理"><a href="#CPU的工作原理" class="headerlink" title="CPU的工作原理"></a>CPU的工作原理</h3><p>CPU的核心组件包括寄存器、PC、ALU</p>
-<p>寄存器可以理解为CPU的口袋，CPU会将一些数据存放在寄存器中</p>
-<p>PC可以理解为CPU的眼睛，它指向CPU即将要执行的一条指令</p>
-<p>ALU时CPU的大脑，负责进行数据的运算</p>
-<p>CPU的工作模式可以简单地概括为<strong>读取指令——&gt;执行指令</strong></p>
-<p>第一步：读取指令，为了进行这一步，CPu还会进行一些准备工作，即将指令和数据从磁盘传输到主存中，这样做没别的意思，就是为了提高指令和数据的读取速度，现代处理器的运算速度是很快的，但是如果读取数据和指令的速度跟不上，再快的处理器发挥不了全部实力，事实上，为了获得更快的读取速度，现代计算机还发展出了高速缓存，其读取速度比内存更快</p>
-<p>对于整个程序，CPU是将其读取到主存或高速缓存中，而对于更小单位的指令和数据，CPU会将他们读取到寄存器中，寄存器的读取速度就更快了</p>
-<p>第二部：执行指令，这个步骤的含义很广泛，因为指令的类型多种多样，大概意思就是CPU会根据指令做相应的事情，这些事情则是更加底层的操作了</p>
-<h3 id="操作系统的功能"><a href="#操作系统的功能" class="headerlink" title="操作系统的功能"></a>操作系统的功能</h3><p>操作系统介于软件与硬件之间，它的作用在我看来无非两个：保护硬件、合理调度计算机的资源</p>
-<h4 id="保护硬件"><a href="#保护硬件" class="headerlink" title="保护硬件"></a>保护硬件</h4><p>事实上，早期的操作系统貌似并没有这个功能，在DOS系统下，应用程序与操作系统的级别是相同的，后来保护模式的出现将应用程序的级别划分为R3，而操作系统的级别则是R0，在保护模式下，应用程序对硬件的操作必须由操作系统代劳，如果操作系统觉得应用程序不能这么做，它可以选择驳回请求</p>
-<p>这样的模式就起到了保护硬件的作用，让计算机不至于那么脆弱</p>
-<h4 id="合理调度计算机资源"><a href="#合理调度计算机资源" class="headerlink" title="合理调度计算机资源"></a>合理调度计算机资源</h4><p>应用程序的运行都是消耗资源的，如果没有一个调度者来合理分配资源，不同的应用程序极可能发生争抢资源的事件，这不仅会拖慢计算机的运行速度，还可能引发计算机崩溃</p>
-<p>操作系统会根据一定的规则分配计算机的资源，以期达到速度最大化的目的，这又是更深的学问了，涉及操作系统如何调度的问题，放在以后再讲</p>
-<h2 id="两个杂谈"><a href="#两个杂谈" class="headerlink" title="两个杂谈"></a>两个杂谈</h2><p>为什么叫杂谈，因为我觉得这两部分作者似乎只是轻点了一下，远没有三个主题讲的详细，或许作者有自己的打算，所以我也只是随便写一点东西</p>
-<h3 id="网络通信"><a href="#网络通信" class="headerlink" title="网络通信"></a>网络通信</h3><p>我对网络通信也不太了解，而且作者讲的也不多，我的理解是，网络通信可以概括为远程服务器与客户端的通信，客户端向服务器发送请求，服务器根据请求做出相应的处理，然后把处理的结果发送给客户端，客户端和服务器都可以是多对多的模式，服务器与服务器连接，客户端与服务器连接，客户端通过服务器与客户端连接，形成一张网络</p>
-<h3 id="并发与并行"><a href="#并发与并行" class="headerlink" title="并发与并行"></a>并发与并行</h3><p>书中将并发与并行分为了三个层次：线程级并发、指令级并行、单指令、多数据并行</p>
-<p>线程级开发和指令级并行的概念我觉得差不多，只是针对的主体不同</p>
-<p>对于单核处理器来说，并发都是伪并发，对于多核处理器来说，存在伪并发，也存在真并发，真并发模式下，一个核心只处理一个线程，伪并发模式下，一个核心可能会处理多个线程，只是核心会快速地在线程之间来回切换，以达到让你误以为每个线程都一直在执行一样，切换的过程中，线程有三种状态：运行、等待、就绪，这里也不做详细说明了，因为书上也没讲，我是在《程序员的自我修养》上看到的</p>
-<p>指令级并发与线程级并发差不太多，CPU会把指令继续分解为更小的步骤，工作模式与线程级并发是几乎一样的</p>
-<p>单指令，多数据并行我不太了解，书中也没有详细的原理解释，还是往后看吧，书上说第五章做了详细的说明</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/09/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4movs-lods-stos-rep/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/09/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4movs-lods-stos-rep/" class="post-title-link" itemprop="url">汇编指令movs, lods, stos, rep</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-09 14:37:00 / Modified: 15:40:07" itemprop="dateCreated datePublished" datetime="2021-12-09T14:37:00+08:00">2021-12-09</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前看ida的时候经常遇到这些指令，但是老是记不住，每次遇到了才去查，查了又忘</p>
-<p>最近一段时间在系统地学习汇编，搞好学到这里，就写一篇blog巩固一下，以后也方便查</p>
-<p>前三条指令本质上就是数据的转移指令，和mov是大同小异的，而最后一条rep是循环指令，可以联想英文单词repeat</p>
-<h2 id="movs"><a href="#movs" class="headerlink" title="movs"></a>movs</h2><p>movs又包含三条指令，movsb、movsw、movsd</p>
-<p>后缀b、w、d分别指byte， word，dword，即字节、字、双字，指明了操作的单位</p>
-<p>首先我们来看一下mov指令的格式：</p>
-<p>mov 目的操作数，源操作数（intel格式）</p>
-<p>mov指令会给出目的操作数和源操作数，指令的大概意思就是把源操作数移动到目的操作数</p>
-<p>但是movs不一样，movs不需要接目的操作数和源操作数，指令的格式是：</p>
-<p><strong>movsb</strong></p>
-<p><strong>movsw</strong></p>
-<p><strong>movsd</strong></p>
-<p>这样写的原因是movs的目的操作数和源操作数是隐式给出的，目的操作数存放在edi中，源操作数存放在esi中</p>
-<p>所以说，<strong>movsb</strong>相当于<strong>mov [edi], byte ptr [esi]</strong></p>
-<p>movsw，movsd以此类推</p>
-<p>每次执行movs指令，edi与esi都会发生相应的变化，要么变大要么变小，变大还是变小取决于DF标志位的值，0则变大，1则变小，变大或者变小的数值取决于源操作数的大小</p>
-<h2 id="lods"><a href="#lods" class="headerlink" title="lods"></a>lods</h2><p>movs是把一个内存空间的内容复制到另一片内存空间，而lods则是将内存空间的值复制到寄存器中</p>
-<p><strong>lodsb</strong></p>
-<p>这条指令表示将esi中的内容复制到eax中，复制的单位是字节</p>
-<p>lodsw、lodsd以此类推</p>
-<p>每次执行都会增加或减少esi的值，参照movs</p>
-<h2 id="stos"><a href="#stos" class="headerlink" title="stos"></a>stos</h2><p>stos与lods指令的行为相反，stosb代表吧eax的一个字节存到edi所指向的内存空间中去</p>
-<p>每次执行都会增加或减少edi的值，参照movs</p>
-<p>于是我们发现：movsb 等价于lodsb stosb</p>
-<h2 id="rep"><a href="#rep" class="headerlink" title="rep"></a>rep</h2><p>rep指令的格式是：</p>
-<p>rep 指令a</p>
-<p>rep会重复执行指令a，每次执行前是ecx的值减一，如果减去一以后ecx的值为0，则结束循环</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov $54, %ecx</span><br><span class="line">rep movsb</span><br></pre></td></tr></table></figure>
-
-<p>这条指令会重复执行54次</p>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>综合上面四条指令，我们可以写一个汇编程序来实现字符串的复制</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">.extern printf</span><br><span class="line">.section .data</span><br><span class="line">mystr:</span><br><span class="line">    .ascii &quot;Hello World!\n&quot;</span><br><span class="line">end:</span><br><span class="line">    .byte 0</span><br><span class="line">.section .bss</span><br><span class="line">    .lcomm output1, 15</span><br><span class="line">    .lcomm output2, 15</span><br><span class="line">.section .text</span><br><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">    leal mystr, %esi</span><br><span class="line">    leal output1, %edi</span><br><span class="line">    cld #add esi and edi everytime</span><br><span class="line">    mov $13, %ecx</span><br><span class="line">    rep movsb</span><br><span class="line"></span><br><span class="line">    movl $end, %esi</span><br><span class="line">    lodsb</span><br><span class="line">    stosb #cut the string</span><br><span class="line"></span><br><span class="line">    leaq output1, %rdi</span><br><span class="line">    call printf</span><br><span class="line">    </span><br><span class="line">    movl $end, %esi</span><br><span class="line">    leal output2+14, %edi</span><br><span class="line">    std #sub esi and edi everytime</span><br><span class="line">    lodsb</span><br><span class="line">    stosb</span><br><span class="line">    leal mystr+13, %esi</span><br><span class="line">    mov $14, %ecx</span><br><span class="line">    rep movsb</span><br><span class="line"></span><br><span class="line">    cld #reset DF</span><br><span class="line"></span><br><span class="line">    movq $output2, %rdi</span><br><span class="line">    call printf</span><br><span class="line"></span><br><span class="line">    mov $60, %rax</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211209153940491.png" alt="image-20211209153940491"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/08/%E6%89%8B%E5%8A%A8%E9%93%BE%E6%8E%A5%E7%A8%8B%E5%BA%8F%E6%97%A0%E6%B3%95%E6%89%A7%E8%A1%8C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/08/%E6%89%8B%E5%8A%A8%E9%93%BE%E6%8E%A5%E7%A8%8B%E5%BA%8F%E6%97%A0%E6%B3%95%E6%89%A7%E8%A1%8C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">手动链接程序无法执行的解决方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-08 16:34:04 / Modified: 16:57:07" itemprop="dateCreated datePublished" datetime="2021-12-08T16:34:04+08:00">2021-12-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>故事的经过是这样的：</p>
-<p>汇编：</p>
-<p><img src="image-20211208163757180.png" alt="image-20211208163757180"></p>
-<p>链接：</p>
-<p><img src="image-20211208163949344.png" alt="image-20211208163949344"></p>
-<p>运行：</p>
-<p><img src="image-20211208164022630.png" alt="image-20211208164022630"></p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>？？？</p>
-<p>待我ls一下：</p>
-<p><img src="image-20211208164109529.png" alt="image-20211208164109529"></p>
-<p>？？？？？？？？？？？？？？？</p>
-<p><img src="image-20211208164157049.png" alt="image-20211208164157049"></p>
-<p>？？？？？？？？？？？？？？？？？？？？？？？？？？？？逐渐诡异起来了</p>
-<p>难道链接器出问题了？试试ldd</p>
-<p><img src="image-20211208164354103.png" alt="image-20211208164354103"></p>
-<p>不太对劲起来了，用readelf看一下程序需要什么ld</p>
-<p><img src="image-20211208164458056.png" alt="image-20211208164458056"></p>
-<p>我们看到：[Requesting program interpreter: /lib/ld64.so.1]，程序需要<strong>ld64.so.1</strong>这个interpreter，可是我链接的时候用的是<strong>ld-linux-x86-64.so.2</strong>啊</p>
-<p>不对劲</p>
-<p><img src="image-20211208164712987.png" alt="image-20211208164712987"></p>
-<p>电脑里根本没有这个共享库，程序运行的时候要动态链接这个库，但是找不到，于是程序跑不起来</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>既然找不到这个共享库，那我们就把程序的interpreter换了，这里用到的是patchelf，网上有安装教程，最好自己下载官方的安装包进行安装，apt install的版本太老了</p>
-<p>把你想用的ld拖到同一目录下，这里我用的是<strong>ld-linux-x86-64.so.2</strong></p>
-<p>然后执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> patchelf --set-interpreter ld-linux-x86-64.so.2 11</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211208165219469.png" alt="image-20211208165219469"></p>
-<p>再次使用ldd和readelf查看程序</p>
-<p><img src="image-20211208165336965.png" alt="image-20211208165336965"></p>
-<p><img src="image-20211208165353446.png" alt="image-20211208165353446"></p>
-<p>这次应该刑了吧</p>
-<p><img src="image-20211208165433712.png" alt="image-20211208165433712"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/07/int-80h%E4%B8%8Esyscall/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/07/int-80h%E4%B8%8Esyscall/" class="post-title-link" itemprop="url">int 80h与syscall</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-07 12:11:51 / Modified: 18:51:46" itemprop="dateCreated datePublished" datetime="2021-12-07T12:11:51+08:00">2021-12-07</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前在《IDApro权威指南》上了解过linux的系统调用，知道了int 80h和syscall，当时也没有做深入了解，就以为这两条指令是等价的</p>
-<p>直到最近在钻研汇编，写程序的时候发现原来一直理解错了</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p><img src="image-20211207113401717.png" alt="image-20211207113401717"></p>
-<p>我的本意是在终端打印msg，不小心把代码写成了这样，结果db调试时出现了以下报错</p>
-<p><img src="image-20211207113841956.png" alt="image-20211207113841956"></p>
-<p>把代码改成这样后，程序成功运行</p>
-<p><img src="image-20211207113941445.png" alt="image-20211207113941445"></p>
-<p>于是我意识到了int 80和sycall的区别</p>
-<h2 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h2><p>syscall时linux x86_64进入内核模式的默认方法，这条指令在i386上不可使用，syscall的系统调用号存放在rax中，参数依次存放在rdi，rsi，rdx，r10，r8和r9中，最多传递六个参数</p>
-<h2 id="int-80h"><a href="#int-80h" class="headerlink" title="int 80h"></a>int 80h</h2><p>int 80h指令可以在i386上使用，程序执行int 80h时就会中断并陷入内核模式，int 80h的系统调用号存放在eax中，参数依次存放在ebx，ecx，edx，esi和edi中，最多传递五个参数</p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>通过以上的描述不难看出，syscall和int 80h最大的区别在于传参规则不同，所以如果我们把程序改成这样，还是可以正常运行的，但是不推荐怎么做，x86_64位下还是推荐使用默认的syscall进行系统调用</p>
-<p><img src="image-20211207120009655.png" alt="image-20211207120009655"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/06/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4-loop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/06/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4-loop/" class="post-title-link" itemprop="url">汇编指令-loop</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-06 21:44:26 / Modified: 21:53:26" itemprop="dateCreated datePublished" datetime="2021-12-06T21:44:26+08:00">2021-12-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>寄！又是被汇编和java折磨的一天，看的是王爽老师的《汇编语言》，但是没有16位的环境，今天主要学了[bx]和loop</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>那就用loop写一个累加程序吧</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">section .data:</span><br><span class="line">    num equ 10abH</span><br><span class="line">section .text:</span><br><span class="line">    global _start</span><br><span class="line">    </span><br><span class="line">_start:</span><br><span class="line">    mov eax, num</span><br><span class="line">    mov ecx, 4</span><br><span class="line">s:  add eax, num</span><br><span class="line">    loop s</span><br><span class="line">    </span><br><span class="line">    mov ebx, 0</span><br><span class="line">    mov eax, 1</span><br><span class="line">    int 80H</span><br><span class="line"># 这里要将代码编译连接成32位的程序，64位运行时会报错，（原因还不明）编译和链接指令在前面的blog中写过</span><br></pre></td></tr></table></figure>
-
-<p>loop指令的格式是：loop 标号</p>
-<p>每次执行到loop指令时，先给ecx减一，如果ecx不为0，则跳转到标号处，ecx为0则往下执行</p>
-<p>使用gdb调试，循环结束后eax的值为5倍的<strong>0x10AB</strong></p>
-<p><img src="image-20211206214513109.png" alt="image-20211206214513109"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -1052,6 +304,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tea%E6%AD%A3%E5%90%91%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">tea正向代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tea%E9%80%86%E5%90%91%E8%84%9A%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">tea逆向脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aes%E6%AD%A3%E5%90%91%E8%84%9A%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">aes正向脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aes%E9%80%86%E5%90%91%E8%84%9A%E6%9C%AC"><span class="nav-number">4.</span> <span class="nav-text">aes逆向脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
