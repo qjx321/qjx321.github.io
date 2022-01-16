@@ -145,6 +145,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/Sycgame/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/15/Sycgame/" class="post-title-link" itemprop="url">Sycgame</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-15 16:34:21" itemprop="dateCreated datePublished" datetime="2022-01-15T16:34:21+08:00">2022-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-16 15:38:30" itemprop="dateModified" datetime="2022-01-16T15:38:30+08:00">2022-01-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="题目下载："><a href="#题目下载：" class="headerlink" title="题目下载："></a>题目下载：</h2><p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1DHBq-qjr6YxiwQHAF91tNw">https://pan.baidu.com/s/1DHBq-qjr6YxiwQHAF91tNw</a><br>提取码：8888</p>
+<p>程序是64位的ELF可执行文件，用file命令查一下就知道了</p>
+<p>拖进IDA查看</p>
+<p>这是main函数的伪代码，根据提示，需要通过五次游戏，很容易看出关键的代码应该在push_box()函数中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">main</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">char</span> **a2, <span class="keyword">char</span> **a3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> choice; <span class="comment">// [rsp+Bh] [rbp-5h]</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-4h]</span></span><br><span class="line"></span><br><span class="line">  setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">  setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">  setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">  alarm(<span class="number">0x1E</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;play game! 5 times, you will get flag!&quot;</span>);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">4</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Ready?(Y/n):&quot;</span>);</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">      choice = getchar();</span><br><span class="line">    <span class="keyword">while</span> ( choice == <span class="string">&#x27;\n&#x27;</span> );</span><br><span class="line">    <span class="keyword">if</span> ( choice != <span class="string">&#x27;Y&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(off_55F7D064107C);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> <span class="keyword">int</span>)push_box() )</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;bye!&quot;</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Yeah Continue!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  system(<span class="string">&quot;cat flag&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>进入push_box函数，这是伪代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 <span class="title">sub_55F7D063F4E4</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v0; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// ebx</span></span><br><span class="line">  <span class="keyword">int</span> v2; <span class="comment">// er12</span></span><br><span class="line">  <span class="keyword">char</span> input; <span class="comment">// [rsp+Bh] [rbp-15h]</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line"></span><br><span class="line">  srand(<span class="number">0</span>);</span><br><span class="line">  v0 = time(<span class="number">0LL</span>);</span><br><span class="line">  srand(v0 + dword_55F7D064306C);</span><br><span class="line">  dword_55F7D064306C += rand();</span><br><span class="line">  sub_55F7D063E443();</span><br><span class="line">  sub_55F7D063E6A6();</span><br><span class="line">  length = <span class="number">20</span>;       				<span class="comment">//设置地图的边长</span></span><br><span class="line">  target_num = <span class="number">4</span>;					<span class="comment">//设置箱子数量</span></span><br><span class="line">  init_map();						<span class="comment">//初始化地图</span></span><br><span class="line">  gift();							<span class="comment">//打印地图</span></span><br><span class="line">  useless();</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Tell me sol:&quot;</span>);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">1</span>; ; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( i &gt; <span class="number">10000</span> )</span><br><span class="line">      exit_2();</span><br><span class="line">    input = getchar();</span><br><span class="line">    <span class="keyword">if</span> ( input != <span class="string">&#x27;\n&#x27;</span> )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">getinput:</span><br><span class="line">    ;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( input != <span class="string">&#x27;w&#x27;</span> &amp;&amp; input != <span class="string">&#x27;s&#x27;</span> &amp;&amp; input != <span class="string">&#x27;a&#x27;</span> &amp;&amp; input != <span class="string">&#x27;d&#x27;</span> &amp;&amp; input != <span class="string">&#x27;0&#x27;</span> ) <span class="comment">//wsad分别代表上下左右</span></span><br><span class="line">    fail();</span><br><span class="line">  <span class="keyword">if</span> ( input == <span class="string">&#x27;0&#x27;</span> )</span><br><span class="line">    exit_0();</span><br><span class="line">  <span class="keyword">if</span> ( <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]] + <span class="number">3005</span> * y_start + x_offset[direct[input]] + x_start] == <span class="number">-1</span> ) <span class="comment">//游戏人物的前方是否是箱子</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">           + <span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">           + <span class="number">3005</span> * y_start</span><br><span class="line">           + x_offset[direct[input]]</span><br><span class="line">           + x_start</span><br><span class="line">           + x_offset[direct[input]]] == <span class="number">-3</span> ) <span class="comment">//箱子的前方是否是目的地</span></span><br><span class="line">    &#123;</span><br><span class="line">      ++solved;</span><br><span class="line">      <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">        + <span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">        + <span class="number">3005</span> * y_start</span><br><span class="line">        + x_offset[direct[input]]</span><br><span class="line">        + x_start</span><br><span class="line">        + x_offset[direct[input]]] = <span class="number">-1</span>; <span class="comment">//箱子到达目的地后，将目的地标识为箱子</span></span><br><span class="line">      <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]] + <span class="number">3005</span> * y_start + x_offset[direct[input]] + x_start] = <span class="number">-2</span>;<span class="comment">//将箱子本来的位置表示为游戏人物</span></span><br><span class="line">      <span class="built_in">map</span>[<span class="number">3005</span> * y_start + x_start] = dword_55F7D28B85E0[<span class="number">3005</span> * y_start + x_start]; <span class="comment">//恢复原来游戏人物所在地的标识，dword_55F7D28B85E0是原本地图的备份</span></span><br><span class="line">      y_start += y_offset[direct[input]];</span><br><span class="line">      x_start += x_offset[direct[input]]; <span class="comment">//修改游戏人物的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="comment">//如果箱子的前方不是目的地</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( !dword_55F7D28B56E0[<span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">                                 + <span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">                                 + <span class="number">3005</span> * y_start</span><br><span class="line">                                 + x_offset[direct[input]]</span><br><span class="line">                                 + x_start</span><br><span class="line">                                 + x_offset[direct[input]]]] ) <span class="comment">//如果箱子撞墙就退出游戏</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">putchar</span>(<span class="number">33</span>);</span><br><span class="line">        exit_1();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> ( dword_55F7D28B85E0[<span class="number">3005</span> * y_offset[direct[input]] + <span class="number">3005</span> * y_start + x_offset[direct[input]] + x_start] == <span class="number">-3</span> ) <span class="comment">//如果箱子原本的位置就是目的地</span></span><br><span class="line">        --solved;</span><br><span class="line">      <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">        + <span class="number">3005</span> * y_offset[direct[input]]</span><br><span class="line">        + <span class="number">3005</span> * y_start</span><br><span class="line">        + x_offset[direct[input]]</span><br><span class="line">        + x_start</span><br><span class="line">        + x_offset[direct[input]]] = <span class="number">-1</span>;<span class="comment">//将箱子到达的位置标记为箱子</span></span><br><span class="line">      <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]] + <span class="number">3005</span> * y_start + x_offset[direct[input]] + x_start] = <span class="number">-2</span>;<span class="comment">//将箱子原本的位置标记为游戏人物</span></span><br><span class="line">      <span class="built_in">map</span>[<span class="number">3005</span> * y_start + x_start] = dword_55F7D28B85E0[<span class="number">3005</span> * y_start + x_start]; <span class="comment">//恢复游戏人物原本的位置</span></span><br><span class="line">      y_start += y_offset[direct[input]];</span><br><span class="line">      x_start += x_offset[direct[input]];<span class="comment">//修改游戏人物的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="comment">//如果游戏人物前方不是箱子</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( !dword_55F7D28B56E0[<span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]] + <span class="number">3005</span> * y_start + x_offset[direct[input]] + x_start]] ) <span class="comment">//如果游戏人物撞墙就退出游戏</span></span><br><span class="line">      exit_1();</span><br><span class="line">    <span class="built_in">map</span>[<span class="number">3005</span> * y_offset[direct[input]] + <span class="number">3005</span> * y_start + x_offset[direct[input]] + x_start] = <span class="number">-2</span>;<span class="comment">//标记新的游戏人物的位置</span></span><br><span class="line">    v1 = y_start;</span><br><span class="line">    v2 = x_start;</span><br><span class="line">    <span class="built_in">map</span>[<span class="number">3005</span> * v1 + v2] = sub_55F7D063E61C(); <span class="comment">//随机设置原本游戏人物的位置</span></span><br><span class="line">    y_start += y_offset[direct[input]];</span><br><span class="line">    x_start += x_offset[direct[input]]; <span class="comment">//更新游戏人物的位置</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( solved != target )</span><br><span class="line">  &#123;</span><br><span class="line">    useless();</span><br><span class="line">    <span class="keyword">goto</span> getinput;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>map[3005 * v1 + v2] = sub_55F7D063E61C(); //随机设置原本游戏人物的位置</strong></p>
+<p>虽然这一行代码随机设置了游戏人物原本的位置，但是我们跟进sub_55F7D063E61C()函数可以发现这个函数返回的值必定使得map[v1] == 0，所以可以确定生成随机数对游戏没有影响，即这块地方不会变成墙壁阻挡游戏人物和箱子的移动</p>
+<h2 id="游戏机制"><a href="#游戏机制" class="headerlink" title="游戏机制"></a>游戏机制</h2><p>一开始游戏会生成一张随机的地图并将地图打印出来</p>
+<p>然后就是常规的推箱子游戏</p>
+<p>通过五轮游戏即可cat flag</p>
+<p>游戏存在一个bug就是，目的地的标记被改变后就不会变回来了，如果游戏人物没有进行推箱子而是从目的地经过，那目的地就会被随即设置一个数，游戏就没得玩了</p>
+<h2 id="脚本编写"><a href="#脚本编写" class="headerlink" title="脚本编写"></a>脚本编写</h2><p>可以去github搜索推箱子的脚本，(算法爹也可以手搓）</p>
+<p>推箱子的脚本可以去github上搜索，所以我们的主要任务就是根据题目给出的gift打印出地图，然后将地图传送给推箱子的脚本就可以了</p>
+<p>获取map的脚本如下，在将其与推箱子的脚本结合起来，就可以得到路线</p>
+<p>由于题目本身的一些原因，我们很难连续五次得到正确的结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>():</span></span><br><span class="line"></span><br><span class="line">    p = process(<span class="string">&#x27;./sycgame&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    is_prime = [<span class="number">1</span>] * <span class="number">3005</span></span><br><span class="line">    is_prime[<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">    i = <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="number">3000</span>:</span><br><span class="line">        <span class="keyword">if</span> is_prime[i]:</span><br><span class="line">            j = <span class="number">2</span></span><br><span class="line">            <span class="keyword">while</span> j * i &lt; <span class="number">3005</span>:</span><br><span class="line">                is_prime[j * i] = <span class="number">0</span></span><br><span class="line">                j = j + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># print(is_prime)</span></span><br><span class="line"></span><br><span class="line">    size = <span class="number">20</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">save_map_to_path</span>(<span class="params">s, path</span>):</span></span><br><span class="line">        t = <span class="string">&#x27;#&#x27;</span> * size + <span class="string">&#x27;\n&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, size - <span class="number">1</span>):</span><br><span class="line">            t += <span class="string">&#x27;#&#x27;</span></span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, size - <span class="number">1</span>):</span><br><span class="line">                i = y * size + x</span><br><span class="line">                <span class="keyword">if</span> s[i] == -<span class="number">2</span>:</span><br><span class="line">                    t += <span class="string">&#x27;@&#x27;</span> <span class="comment"># player</span></span><br><span class="line">                <span class="keyword">elif</span> s[i] == -<span class="number">1</span>:</span><br><span class="line">                    t += <span class="string">&#x27;$&#x27;</span> <span class="comment"># Box</span></span><br><span class="line">                <span class="keyword">elif</span> s[i] == -<span class="number">3</span>:</span><br><span class="line">                    t += <span class="string">&#x27;.&#x27;</span> <span class="comment"># Destination</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">assert</span> s[i] &gt; <span class="number">0</span></span><br><span class="line">                    <span class="keyword">if</span> is_prime[s[i]]:</span><br><span class="line">                        t += <span class="string">&#x27;#&#x27;</span> <span class="comment"># wall</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        t += <span class="string">&#x27; &#x27;</span> <span class="comment"># path</span></span><br><span class="line">            t += <span class="string">&#x27;#\n&#x27;</span></span><br><span class="line">        t += <span class="string">&#x27;#&#x27;</span> * size + <span class="string">&#x27;\n&#x27;</span></span><br><span class="line">        <span class="built_in">print</span>(t)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Ready?(Y/n):&#x27;</span>, <span class="string">&#x27;Y&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;gift:\n&#x27;</span>)</span><br><span class="line">    s = [<span class="built_in">int</span>(j) <span class="keyword">for</span> j <span class="keyword">in</span> p.recvuntil(<span class="string">&#x27;\n&#x27;</span>).decode()[:-<span class="number">2</span>].split()]</span><br><span class="line">    save_map_to_path(s, <span class="string">&#x27;./sokobanLevels/map.txt&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    pause()    </span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    p.interactive()</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">run()</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/264281">https://www.anquanke.com/post/id/264281</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/27/SCTF-CplusExceptionEncrypt/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -267,7 +353,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-10 15:33:35" itemprop="dateModified" datetime="2022-01-10T15:33:35+08:00">2022-01-10</time>
+                <time title="Modified: 2022-01-15 16:35:01" itemprop="dateModified" datetime="2022-01-15T16:35:01+08:00">2022-01-15</time>
               </span>
 
           
@@ -334,11 +420,9 @@
 <p>继续看phase_5，首先是汇编代码</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">Dump of assembler code for function phase_5:</span><br><span class="line">   0x0000000000401062 &lt;+0&gt;:     push   rbx</span><br><span class="line">   0x0000000000401063 &lt;+1&gt;:     sub    rsp,0x20</span><br><span class="line">   0x0000000000401067 &lt;+5&gt;:     mov    rbx,rdi</span><br><span class="line">   0x000000000040106a &lt;+8&gt;:     mov    rax,QWORD PTR fs:0x28</span><br><span class="line">   0x0000000000401073 &lt;+17&gt;:    mov    QWORD PTR [rsp+0x18],rax</span><br><span class="line">   0x0000000000401078 &lt;+22&gt;:    xor    eax,eax</span><br><span class="line">   0x000000000040107a &lt;+24&gt;:    call   0x40131b &lt;string_length&gt;</span><br><span class="line">   0x000000000040107f &lt;+29&gt;:    cmp    eax,0x6</span><br><span class="line">   0x0000000000401082 &lt;+32&gt;:    je     0x4010d2 &lt;phase_5+112&gt;   		字符串长度必须是6</span><br><span class="line">   0x0000000000401084 &lt;+34&gt;:    call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x0000000000401089 &lt;+39&gt;:    jmp    0x4010d2 &lt;phase_5+112&gt;</span><br><span class="line">   0x000000000040108b &lt;+41&gt;:    movzx  ecx,BYTE PTR [rbx+rax*1]			**********</span><br><span class="line">   0x000000000040108f &lt;+45&gt;:    mov    BYTE PTR [rsp],cl				循环取字符串中的字母</span><br><span class="line">   0x0000000000401092 &lt;+48&gt;:    mov    rdx,QWORD PTR [rsp]				and 0xf，即取ascii码的个位</span><br><span class="line">   0x0000000000401096 &lt;+52&gt;:    and    edx,0xf						   然后以此为下标从[rdx+0x4024b0]</span><br><span class="line">   0x0000000000401099 &lt;+55&gt;:    movzx  edx,BYTE PTR [rdx+0x4024b0]		 里面取字节</span><br><span class="line">   0x00000000004010a0 &lt;+62&gt;:    mov    BYTE PTR [rsp+rax*1+0x10],dl</span><br><span class="line">   0x00000000004010a4 &lt;+66&gt;:    add    rax,0x1</span><br><span class="line">   0x00000000004010a8 &lt;+70&gt;:    cmp    rax,0x6</span><br><span class="line">   0x00000000004010ac &lt;+74&gt;:    jne    0x40108b &lt;phase_5+41&gt;   			**********</span><br><span class="line">   0x00000000004010ae &lt;+76&gt;:    mov    BYTE PTR [rsp+0x16],0x0</span><br><span class="line">   0x00000000004010b3 &lt;+81&gt;:    mov    esi,0x40245e</span><br><span class="line">   0x00000000004010b8 &lt;+86&gt;:    lea    rdi,[rsp+0x10]</span><br><span class="line">   0x00000000004010bd &lt;+91&gt;:    call   0x401338 &lt;strings_not_equal&gt;   	比较上面取出的字符串与0x40245e</span><br><span class="line">   0x00000000004010c2 &lt;+96&gt;:    test   eax,eax						  中的字符串</span><br><span class="line">   0x00000000004010c4 &lt;+98&gt;:    je     0x4010d9 &lt;phase_5+119&gt;</span><br><span class="line">   0x00000000004010c6 &lt;+100&gt;:   call   0x40143a &lt;explode_bomb&gt;</span><br><span class="line">   0x00000000004010cb &lt;+105&gt;:   nop    DWORD PTR [rax+rax*1+0x0]</span><br><span class="line">   0x00000000004010d0 &lt;+110&gt;:   jmp    0x4010d9 &lt;phase_5+119&gt;</span><br><span class="line">   0x00000000004010d2 &lt;+112&gt;:   mov    eax,0x0</span><br><span class="line">   0x00000000004010d7 &lt;+117&gt;:   jmp    0x40108b &lt;phase_5+41&gt;</span><br><span class="line">   0x00000000004010d9 &lt;+119&gt;:   mov    rax,QWORD PTR [rsp+0x18]</span><br><span class="line">   0x00000000004010de &lt;+124&gt;:   xor    rax,QWORD PTR fs:0x28</span><br><span class="line">   0x00000000004010e7 &lt;+133&gt;:   je     0x4010ee &lt;phase_5+140&gt;</span><br><span class="line">   0x00000000004010e9 &lt;+135&gt;:   call   0x400b30 &lt;__stack_chk_fail@plt&gt;</span><br><span class="line">   0x00000000004010ee &lt;+140&gt;:   add    rsp,0x20</span><br><span class="line">   0x00000000004010f2 &lt;+144&gt;:   pop    rbx</span><br><span class="line">   0x00000000004010f3 &lt;+145&gt;:   ret</span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
 
-<img src="/2021/12/22/BombLab/image-20220107211729686.png" class="" title="image-20220107211729686">
-
+<p><img src="image-20220107211729686.png" alt="image-20220107211729686"></p>
 <p>可以看到，0x40425e中的字符串是“flyers”，再看看0x4024b0里面的字节是什么，因为下标最大时0xf，即15，所以我们只关心前16个字节即可</p>
-<img src="/2021/12/22/BombLab/image-20220107212050531.png" class="" title="image-20220107212050531">
-
+<p><img src="image-20220107212050531.png" alt="image-20220107212050531"></p>
 <p>这十六个字节是“maduiersnfotvbyl”，所以可以推算出下标应该是9，f，e，5，6，7</p>
 <p>再从ascii表中找到合适的字符即可</p>
 <p>“yonefg”符合条件</p>
@@ -348,14 +432,12 @@
 <p>还是按照上面的办法，调试加分析</p>
 <p>首先是将输入转化为六个数字，接着是一个嵌套循环，作用是检测六个数字是否都小于7，而且六个数字不能相等，接着又是一个循环，用7依次减去这六个数得到新的六个数，然后用这六个数作为索引去一个链表里面取值</p>
 <p>下图就是那个链表，以及链表的元素</p>
-<img src="/2021/12/22/BombLab/image-20220110152628663.png" class="" title="image-20220110152628663">
-
+<p><img src="image-20220110152628663.png" alt="image-20220110152628663"></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Node</span> * <span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>因此可以得到六个node的大小关系，从大到小依次是3，4，5，6，1，2</p>
 <p>再用7减去这六个数得到4，3，2，1，5，6</p>
-<img src="/2021/12/22/BombLab/image-20220110152956068.png" class="" title="image-20220110152956068">
-
+<p><img src="image-20220110152956068.png" alt="image-20220110152956068"></p>
 <p>在最后进行比较的时候，如果后前一项大于等于后一项，就可以过，否则就boom</p>
 <p>所以我们可以得到第六关的ans就是“4 3 2 1 5 6”</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">fall = process(<span class="string">&quot;./bomb&quot;</span>)</span><br><span class="line">sla = <span class="keyword">lambda</span> a, b: fall.sendlineafter(a, b)</span><br><span class="line"></span><br><span class="line">sla(<span class="string">&#x27;nice day!\n&#x27;</span>, <span class="string">&#x27;Border relations with Canada have never been better.&#x27;</span>)</span><br><span class="line">sla(<span class="string">&#x27;next one?\n&#x27;</span>, <span class="string">&#x27;1 2 4 8 16 32&#x27;</span>)</span><br><span class="line">sla(<span class="string">&#x27;going!\n&#x27;</span>, <span class="string">&#x27;1 311&#x27;</span>)</span><br><span class="line">sla(<span class="string">&#x27;there!\n&#x27;</span>, <span class="string">&#x27;7 0&#x27;</span>)</span><br><span class="line">sla(<span class="string">&#x27;Try this one.\n&#x27;</span>, <span class="string">&#x27;yonefg&#x27;</span>)</span><br><span class="line"><span class="comment"># gdb.attach(fall, &quot;b *0x4010f4\n&quot;)</span></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">sla(<span class="string">&#x27;On to the next...\n&#x27;</span>, <span class="string">&#x27;4 3 2 1 6 5&#x27;</span>)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">fall.interactive()</span><br></pre></td></tr></table></figure>
@@ -965,72 +1047,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/06/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4-loop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/06/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4-loop/" class="post-title-link" itemprop="url">汇编指令-loop</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-06 21:44:26 / Modified: 21:53:26" itemprop="dateCreated datePublished" datetime="2021-12-06T21:44:26+08:00">2021-12-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>寄！又是被汇编和java折磨的一天，看的是王爽老师的《汇编语言》，但是没有16位的环境，今天主要学了[bx]和loop</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>那就用loop写一个累加程序吧</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">section .data:</span><br><span class="line">    num equ 10abH</span><br><span class="line">section .text:</span><br><span class="line">    global _start</span><br><span class="line">    </span><br><span class="line">_start:</span><br><span class="line">    mov eax, num</span><br><span class="line">    mov ecx, 4</span><br><span class="line">s:  add eax, num</span><br><span class="line">    loop s</span><br><span class="line">    </span><br><span class="line">    mov ebx, 0</span><br><span class="line">    mov eax, 1</span><br><span class="line">    int 80H</span><br><span class="line"># 这里要将代码编译连接成32位的程序，64位运行时会报错，（原因还不明）编译和链接指令在前面的blog中写过</span><br></pre></td></tr></table></figure>
-
-<p>loop指令的格式是：loop 标号</p>
-<p>每次执行到loop指令时，先给ecx减一，如果ecx不为0，则跳转到标号处，ecx为0则往下执行</p>
-<p>使用gdb调试，循环结束后eax的值为5倍的<strong>0x10AB</strong></p>
-<p><img src="image-20211206214513109.png" alt="image-20211206214513109"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1100,7 +1116,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
