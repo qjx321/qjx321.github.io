@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="通过17道题来学习angr在CTF中使用方法 原github仓库：https:&#x2F;&#x2F;github.com&#x2F;jakespringer&#x2F;angr_ctf 里面的题目需要自己手动编译，如果没有编译环境，在https:&#x2F;&#x2F;github.com&#x2F;lcatro&#x2F;Angr-CTF-Learn-Note可以找的编译好的题目 00_angr_find1234567891011121314151617int __cde">
+<meta property="og:type" content="article">
+<meta property="og:title" content="angr学习笔记">
+<meta property="og:url" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="通过17道题来学习angr在CTF中使用方法 原github仓库：https:&#x2F;&#x2F;github.com&#x2F;jakespringer&#x2F;angr_ctf 里面的题目需要自己手动编译，如果没有编译环境，在https:&#x2F;&#x2F;github.com&#x2F;lcatro&#x2F;Angr-CTF-Learn-Note可以找的编译好的题目 00_angr_find1234567891011121314151617int __cde">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118152218516.png">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118155407574.png">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118155702972.png">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118155724041.png">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118163028129.png">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118174511747.png">
+<meta property="og:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118174716775.png">
+<meta property="article:published_time" content="2022-01-18T07:15:00.000Z">
+<meta property="article:modified_time" content="2022-01-18T13:25:40.569Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118152218516.png">
+
+<link rel="canonical" href="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>angr学习笔记 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          angr学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-18 15:15:00 / Modified: 21:25:40" itemprop="dateCreated datePublished" datetime="2022-01-18T15:15:00+08:00">2022-01-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>通过17道题来学习angr在CTF中使用方法</p>
+<p>原github仓库：<a target="_blank" rel="noopener" href="https://github.com/jakespringer/angr_ctf">https://github.com/jakespringer/angr_ctf</a></p>
+<p>里面的题目需要自己手动编译，如果没有编译环境，在<a target="_blank" rel="noopener" href="https://github.com/lcatro/Angr-CTF-Learn-Note%E5%8F%AF%E4%BB%A5%E6%89%BE%E7%9A%84%E7%BC%96%E8%AF%91%E5%A5%BD%E7%9A%84%E9%A2%98%E7%9B%AE">https://github.com/lcatro/Angr-CTF-Learn-Note可以找的编译好的题目</a></p>
+<h2 id="00-angr-find"><a href="#00-angr-find" class="headerlink" title="00_angr_find"></a>00_angr_find</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [esp+1Ch] [ebp-1Ch]</span></span><br><span class="line">  <span class="keyword">char</span> s1[<span class="number">9</span>]; <span class="comment">// [esp+23h] [ebp-15h] BYREF</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v6; <span class="comment">// [esp+2Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v6 = __readgsdword(<span class="number">0x14</span>u);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Enter the password: &quot;</span>);</span><br><span class="line">  __isoc99_scanf(<span class="string">&quot;%8s&quot;</span>, s1);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">7</span>; ++i )</span><br><span class="line">    s1[i] = complex_function(s1[i], i);</span><br><span class="line">  <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(s1, <span class="string">&quot;FPQPMQXT&quot;</span>) )</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Good Job.&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Try again.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">complex_function</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">int</span> a2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> ( a1 &lt;= <span class="string">&#x27;@&#x27;</span> || a1 &gt; <span class="number">90</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Try again.&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> (<span class="number">3</span> * a2 + a1 - <span class="number">65</span>) % <span class="number">26</span> + <span class="number">65</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>典型的可以使用angr解的题目，当然爆破也没问题，但这一题明显优先选择angr</p>
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118152218516.png" class="" title="image-20220118152218516">
+
+<p>找到打印Good Job的地址，然后开始编写脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>(<span class="params">argv</span>):</span></span><br><span class="line">    <span class="comment"># 目标文件的路径</span></span><br><span class="line">    path_to_binary = <span class="string">&#x27;../program/00_angr_find&#x27;</span></span><br><span class="line">    <span class="comment"># 创建angr项目</span></span><br><span class="line">    project = angr.Project(path_to_binary)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 设置项目起点，entry_state代表程序的入口点，即main函数</span></span><br><span class="line">    initial_state = project.factory.entry_state()</span><br><span class="line">    <span class="comment"># 设置模拟器</span></span><br><span class="line">    simulation = project.factory.simgr(initial_state)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 设置目标地址</span></span><br><span class="line">    print_good_addr = <span class="number">0x0804867D</span></span><br><span class="line">    simulation.explore(find=print_good_addr)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 如果到达目标地址，打印此时的符号向量</span></span><br><span class="line">    <span class="keyword">if</span> simulation.found:</span><br><span class="line">        solution_state = simulation.found[<span class="number">0</span>]</span><br><span class="line">        <span class="built_in">print</span>(solution_state.posix.dump(sys.stdin.fileno()))</span><br><span class="line">    <span class="comment"># 否者抛出失败异常</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&#x27;Could not find solution&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main(sys.argv)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>在第一题中，我们知道了如何使用angr创建项目和模拟器，如何使用地址约束模拟器，以及如何打印正确的符号向量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">angr.Project(file_path) <span class="comment">#创建项目</span></span><br><span class="line">project.factory.simgr(initial_state) <span class="comment">#创建模拟器</span></span><br><span class="line">simulation.explore(find=addr) <span class="comment">#约束模拟器到达find指定的地址</span></span><br><span class="line"></span><br><span class="line">solution_state = simulation.found[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">print</span>(solution_state.posix.dump(sys.stdin.fileno())) <span class="comment">#打印符号向量</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/M/a/A/expFile (master)&gt; python3 0.py</span><br><span class="line">WARNING | 2022-01-18 15:11:38,895 | angr.storage.memory_mixins.default_filler_mixin | The program is accessing memory or registers with an unspecified value. This could indicate unwanted behavior.</span><br><span class="line">WARNING | 2022-01-18 15:11:38,895 | angr.storage.memory_mixins.default_filler_mixin | angr will cope with this by generating an unconstrained symbolic variable and continuing. You can resolve this by:</span><br><span class="line">WARNING | 2022-01-18 15:11:38,895 | angr.storage.memory_mixins.default_filler_mixin | 1) setting a value to the initial state</span><br><span class="line">WARNING | 2022-01-18 15:11:38,895 | angr.storage.memory_mixins.default_filler_mixin | 2) adding the state option ZERO_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to make unknown regions hold null</span><br><span class="line">WARNING | 2022-01-18 15:11:38,895 | angr.storage.memory_mixins.default_filler_mixin | 3) adding the state option SYMBOL_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to suppress these messages.</span><br><span class="line">WARNING | 2022-01-18 15:11:38,895 | angr.storage.memory_mixins.default_filler_mixin | Filling register edi with 4 unconstrained bytes referenced from 0x80486b1 (__libc_csu_init+0x1 in 00_angr_find (0x80486b1))</span><br><span class="line">WARNING | 2022-01-18 15:11:38,896 | angr.storage.memory_mixins.default_filler_mixin | Filling register ebx with 4 unconstrained bytes referenced from 0x80486b3 (__libc_csu_init+0x3 in 00_angr_find (0x80486b3))</span><br><span class="line">WARNING | 2022-01-18 15:11:40,019 | angr.storage.memory_mixins.default_filler_mixin | Filling memory at 0x7ffeff50 with 4 unconstrained bytes referenced from 0x818ac20 (strcmp+0x0 in libc.so.6 (0x8ac20))</span><br><span class="line">b&#x27;FMKGABFY&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="01-angr-avoid"><a href="#01-angr-avoid" class="headerlink" title="01_angr_avoid"></a>01_angr_avoid</h2><p>emmm，第二题的main函数分支太多，我想看伪代码，一个F5直接卡死了，ida提示函数太大，看来是反编译不了了</p>
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118155407574.png" class="" title="image-20220118155407574">
+
+<p>在字符串窗口找到了Good Job字符串，然后得到了Goof Job的地址</p>
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118155702972.png" class="" title="image-20220118155702972">
+
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118155724041.png" class="" title="image-20220118155724041">
+
+<p>将前一个脚本的print_good_addr改一下就可以了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>(<span class="params">argv</span>):</span></span><br><span class="line">    <span class="comment"># 目标文件的路径</span></span><br><span class="line">    path_to_binary = <span class="string">&#x27;../program/01_angr_avoid&#x27;</span></span><br><span class="line">    <span class="comment"># 创建angr项目</span></span><br><span class="line">    project = angr.Project(path_to_binary)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 设置项目起点，enter_state代表程序的入口点，即main函数</span></span><br><span class="line">    initial_state = project.factory.entry_state()</span><br><span class="line">    <span class="comment"># 设置模拟器</span></span><br><span class="line">    simulation = project.factory.simgr(initial_state)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 设置目标地址</span></span><br><span class="line">    print_good_addr = <span class="number">0x080485E0</span></span><br><span class="line">    fail_addr = <span class="number">0x080485F2</span></span><br><span class="line">    simulation.explore(find=print_good_addr, avoid=fail_addr)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 如果到达目标地址，打印此时的符号向量</span></span><br><span class="line">    <span class="keyword">if</span> simulation.found:</span><br><span class="line">        solution_state = simulation.found[<span class="number">0</span>]</span><br><span class="line">        <span class="built_in">print</span>(solution_state.posix.dumps(sys.stdin.fileno()))</span><br><span class="line">    <span class="comment"># 否者抛出失败异常</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&#x27;Could not find solution&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main(sys.argv)</span><br></pre></td></tr></table></figure>
+
+<p>这里我们又新增了一个avoid选项，其实在这一题加不加avoid都可以跑出来，但是在某些题目中，添加avoid可以有效地防止路径爆炸</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/M/a/A/expFile (master) [1]&gt; python3 1.py</span><br><span class="line">WARNING | 2022-01-18 16:12:26,225 | angr.storage.memory_mixins.default_filler_mixin | The program is accessing memory or registers with an unspecified value. This could indicate unwanted behavior.</span><br><span class="line">WARNING | 2022-01-18 16:12:26,225 | angr.storage.memory_mixins.default_filler_mixin | angr will cope with this by generating an unconstrained symbolic variable and continuing. You can resolve this by:</span><br><span class="line">WARNING | 2022-01-18 16:12:26,225 | angr.storage.memory_mixins.default_filler_mixin | 1) setting a value to the initial state</span><br><span class="line">WARNING | 2022-01-18 16:12:26,225 | angr.storage.memory_mixins.default_filler_mixin | 2) adding the state option ZERO_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to make unknown regions hold null</span><br><span class="line">WARNING | 2022-01-18 16:12:26,225 | angr.storage.memory_mixins.default_filler_mixin | 3) adding the state option SYMBOL_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to suppress these messages.</span><br><span class="line">WARNING | 2022-01-18 16:12:26,225 | angr.storage.memory_mixins.default_filler_mixin | Filling register edi with 4 unconstrained bytes referenced from 0x80d4591 (__libc_csu_init+0x1 in 01_angr_avoid (0x80d4591))</span><br><span class="line">WARNING | 2022-01-18 16:12:26,226 | angr.storage.memory_mixins.default_filler_mixin | Filling register ebx with 4 unconstrained bytes referenced from 0x80d4593 (__libc_csu_init+0x3 in 01_angr_avoid (0x80d4593))</span><br><span class="line">WARNING | 2022-01-18 16:12:55,982 | angr.storage.memory_mixins.default_filler_mixin | Filling memory at 0x7ffeff2d with 11 unconstrained bytes referenced from 0x818b210 (strncmp+0x0 in libc.so.6 (0x8b210))</span><br><span class="line">WARNING | 2022-01-18 16:12:55,982 | angr.storage.memory_mixins.default_filler_mixin | Filling memory at 0x7ffeff50 with 4 unconstrained bytes referenced from 0x818b210 (strncmp+0x0 in libc.so.6 (0x8b210))</span><br><span class="line">b&#x27;REFIYHTP&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这一题我们学到了avoid的使用方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">simulation.explore(find=print_good_addr, avoid=fail_addr) <span class="comment">#约束模拟器避开aviod指定的地址</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="02-angr-find-condition"><a href="#02-angr-find-condition" class="headerlink" title="02_angr_find_condition"></a>02_angr_find_condition</h2><p>拖进ida查看伪代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [esp+18h] [ebp-40h]</span></span><br><span class="line">  <span class="keyword">int</span> j; <span class="comment">// [esp+1Ch] [ebp-3Ch]</span></span><br><span class="line">  <span class="keyword">char</span> s1[<span class="number">20</span>]; <span class="comment">// [esp+24h] [ebp-34h] BYREF</span></span><br><span class="line">  <span class="keyword">char</span> s2[<span class="number">20</span>]; <span class="comment">// [esp+38h] [ebp-20h] BYREF</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v8; <span class="comment">// [esp+4Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v8 = __readgsdword(<span class="number">0x14</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">19</span>; ++i )</span><br><span class="line">    s2[i] = <span class="number">0</span>;</span><br><span class="line">  qmemcpy(s2, <span class="string">&quot;YDTYFHMJ&quot;</span>, <span class="number">8</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Enter the password: &quot;</span>);</span><br><span class="line">  __isoc99_scanf(<span class="string">&quot;%8s&quot;</span>, s1);</span><br><span class="line">  <span class="keyword">for</span> ( j = <span class="number">0</span>; j &lt;= <span class="number">7</span>; ++j )</span><br><span class="line">    s1[j] = complex_function(s1[j], j + <span class="number">8</span>);</span><br><span class="line">  <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(s1, s2) )</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Good Job.&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Try again.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">complex_function</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">int</span> a2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> ( a1 &lt;= <span class="number">64</span> || a1 &gt; <span class="number">90</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Try again.&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> (<span class="number">31</span> * a2 + a1 - <span class="number">65</span>) % <span class="number">26</span> + <span class="number">65</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和第一题很相似，我们很容易就能找到打印Good Job的地址，不同的是：打印Good Job的地址不只一个，Try Again也一样，这时候我们就无法通过指定目标地址来搜索路径了</p>
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118163028129.png" class="" title="image-20220118163028129">
+
+<p>所以我们可以通过标准输出打印的字符来约束模拟器的行为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>(<span class="params">argv</span>):</span></span><br><span class="line">    path_to_binary = <span class="string">&#x27;../program/02_angr_find_condition&#x27;</span></span><br><span class="line">    project = angr.Project(path_to_binary)</span><br><span class="line">    initial_state = project.factory.entry_state()</span><br><span class="line">    simulation = project.factory.simgr(initial_state)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">good_job</span>(<span class="params">state</span>):</span></span><br><span class="line">      stdout_output = state.posix.dumps(sys.stdout.fileno())</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="string">&#x27;Good Job&#x27;</span> <span class="keyword">in</span> <span class="built_in">str</span>(stdout_output)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">try_again</span>(<span class="params">state</span>):</span> </span><br><span class="line">      stdout_output = state.posix.dumps(sys.stdout.fileno())</span><br><span class="line">    </span><br><span class="line">      <span class="keyword">return</span> <span class="string">&#x27;Try again&#x27;</span> <span class="keyword">in</span> <span class="built_in">str</span>(stdout_output)</span><br><span class="line"></span><br><span class="line">    simulation.explore(find=good_job, avoid=try_again) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> simulation.found:</span><br><span class="line">        solution_state = simulation.found[<span class="number">0</span>]</span><br><span class="line">        <span class="built_in">print</span>(solution_state.posix.dumps(sys.stdin.fileno()))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&#x27;Could not find solution&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main(sys.argv)</span><br></pre></td></tr></table></figure>
+
+<p>这一题，我们将find和avoid设置为回调函数，stdout_output = state.posix.dumps(sys.stdout.fileno())用来获取标准输出的字符</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/M/a/A/expFile (master)&gt; python3 2.py</span><br><span class="line">WARNING | 2022-01-18 16:39:44,537 | angr.storage.memory_mixins.default_filler_mixin | The program is accessing memory or registers with an unspecified value. This could indicate unwanted behavior.</span><br><span class="line">WARNING | 2022-01-18 16:39:44,537 | angr.storage.memory_mixins.default_filler_mixin | angr will cope with this by generating an unconstrained symbolic variable and continuing. You can resolve this by:</span><br><span class="line">WARNING | 2022-01-18 16:39:44,537 | angr.storage.memory_mixins.default_filler_mixin | 1) setting a value to the initial state</span><br><span class="line">WARNING | 2022-01-18 16:39:44,537 | angr.storage.memory_mixins.default_filler_mixin | 2) adding the state option ZERO_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to make unknown regions hold null</span><br><span class="line">WARNING | 2022-01-18 16:39:44,537 | angr.storage.memory_mixins.default_filler_mixin | 3) adding the state option SYMBOL_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to suppress these messages.</span><br><span class="line">WARNING | 2022-01-18 16:39:44,537 | angr.storage.memory_mixins.default_filler_mixin | Filling register edi with 4 unconstrained bytes referenced from 0x804d291 (__libc_csu_init+0x1 in 02_angr_find_condition (0x804d291))</span><br><span class="line">WARNING | 2022-01-18 16:39:44,538 | angr.storage.memory_mixins.default_filler_mixin | Filling register ebx with 4 unconstrained bytes referenced from 0x804d293 (__libc_csu_init+0x3 in 02_angr_find_condition (0x804d293))</span><br><span class="line">WARNING | 2022-01-18 16:39:45,601 | angr.storage.memory_mixins.default_filler_mixin | Filling memory at 0x7ffeff2d with 11 unconstrained bytes referenced from 0x818ac20 (strcmp+0x0 in libc.so.6 (0x8ac20))</span><br><span class="line">WARNING | 2022-01-18 16:39:45,601 | angr.storage.memory_mixins.default_filler_mixin | Filling memory at 0x7ffeff50 with 4 unconstrained bytes referenced from 0x818ac20 (strcmp+0x0 in libc.so.6 (0x8ac20))</span><br><span class="line">b&#x27;KKVVXUUM&#x27;</span><br></pre></td></tr></table></figure>
+
+<h2 id="03-angr-symbolic-registers"><a href="#03-angr-symbolic-registers" class="headerlink" title="03_angr_symbolic_registers"></a>03_angr_symbolic_registers</h2><p>伪代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 user_input; <span class="comment">// rax</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// [esp+4h] [ebp-14h]</span></span><br><span class="line">  <span class="keyword">int</span> v6; <span class="comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  <span class="keyword">int</span> v7; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v8; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Enter the password: &quot;</span>);</span><br><span class="line">  user_input = get_user_input();</span><br><span class="line">  v7 = HIDWORD(user_input);</span><br><span class="line">  v5 = complex_function_1(user_input);</span><br><span class="line">  v6 = complex_function_2();</span><br><span class="line">  v8 = complex_function_3(v7);</span><br><span class="line">  <span class="keyword">if</span> ( v5 || v6 || v8 )</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Try again.&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Good Job.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_user_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// [esp+0h] [ebp-18h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v2; <span class="comment">// [esp+4h] [ebp-14h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v3[<span class="number">4</span>]; <span class="comment">// [esp+8h] [ebp-10h] BYREF</span></span><br><span class="line"></span><br><span class="line">  v3[<span class="number">1</span>] = __readgsdword(<span class="number">0x14</span>u);</span><br><span class="line">  __isoc99_scanf(<span class="string">&quot;%x %x %x&quot;</span>, &amp;v1, &amp;v2, v3);</span><br><span class="line">  <span class="keyword">return</span> v1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到get_user_input()获取三个十六进制整数</p>
+<p>但是complex_function_1，complex_function_2，complex_function_3的参数并不明朗，ida没有分析出来，转到汇编代码</p>
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118174511747.png" class="" title="image-20220118174511747">
+
+<p>可以看到这三个数分别放在了eax，ebx，edx中</p>
+<img src="/2022/01/18/angr%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220118174716775.png" class="" title="image-20220118174716775">
+
+<p>这里可以看出complex_function_1，complex_function_2，complex_function_3的参数依次为第一个数，第二个数，第三个数</p>
+<p>此时，我们的input放在寄存器中，如果了解符号执行和angr，我们是可以在运行时修改寄存器的值的，于是这一题的脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    binary_path = <span class="string">&#x27;../program/03_angr_symbolic_registers&#x27;</span></span><br><span class="line">    project = angr.Project(binary_path)</span><br><span class="line">	</span><br><span class="line">    <span class="comment"># 设置项目开始地址</span></span><br><span class="line">    start_addr = <span class="number">0x0804890E</span></span><br><span class="line">    initial_state = project.factory.blank_state(addr=start_addr)</span><br><span class="line">	</span><br><span class="line">    </span><br><span class="line">   <span class="comment"># 将寄存器符号化</span></span><br><span class="line">    bit_length = <span class="number">32</span></span><br><span class="line">    psd0 = claripy.BVS(<span class="string">&#x27;psd0&#x27;</span>, bit_length)</span><br><span class="line">    psd1 = claripy.BVS(<span class="string">&#x27;psd1&#x27;</span>, bit_length)</span><br><span class="line">    psd2 = claripy.BVS(<span class="string">&#x27;psd2&#x27;</span>, bit_length)</span><br><span class="line"></span><br><span class="line">    initial_state.regs.eax = psd0</span><br><span class="line">    initial_state.regs.ebx = psd1</span><br><span class="line">    initial_state.regs.edx = psd2</span><br><span class="line"></span><br><span class="line">    simulation = project.factory.simgr(initial_state)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">good_job</span>(<span class="params">state</span>):</span></span><br><span class="line">        stdout_content = state.posix.dumps(sys.stdout.fileno())</span><br><span class="line">        <span class="keyword">return</span> <span class="string">b&#x27;Good Job.&#x27;</span> <span class="keyword">in</span> stdout_content</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fail</span>(<span class="params">state</span>):</span></span><br><span class="line">        stdout_content = state.posix.dumps(sys.stdout.fileno())</span><br><span class="line">        <span class="keyword">return</span> <span class="string">b&#x27;Try again.&#x27;</span> <span class="keyword">in</span> stdout_content</span><br><span class="line"></span><br><span class="line">    simulation.explore(find=good_job, avoid=fail)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> simulation.found:</span><br><span class="line">        solution_state = simulation.found[<span class="number">0</span>]</span><br><span class="line">        solution0 = solution_state.se.<span class="built_in">eval</span>(psd0)</span><br><span class="line">        solution1 = solution_state.se.<span class="built_in">eval</span>(psd1)</span><br><span class="line">        solution2 = solution_state.se.<span class="built_in">eval</span>(psd2)</span><br><span class="line"></span><br><span class="line">        solution = <span class="string">&#x27;%x %x %x&#x27;</span> % (solution0, solution1, solution2)</span><br><span class="line">        <span class="built_in">print</span>(solution)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&#x27;Could not find the solution&#x27;</span>)</span><br><span class="line">            </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/M/a/A/expFile (master)&gt; python3 3.py</span><br><span class="line">WARNING | 2022-01-18 21:18:25,840 | angr.storage.memory_mixins.default_filler_mixin | The program is accessing memory or registers with an unspecified value. This could indicate unwanted behavior.</span><br><span class="line">WARNING | 2022-01-18 21:18:25,840 | angr.storage.memory_mixins.default_filler_mixin | angr will cope with this by generating an unconstrained symbolic variable and continuing. You can resolve this by:</span><br><span class="line">WARNING | 2022-01-18 21:18:25,840 | angr.storage.memory_mixins.default_filler_mixin | 1) setting a value to the initial state</span><br><span class="line">WARNING | 2022-01-18 21:18:25,840 | angr.storage.memory_mixins.default_filler_mixin | 2) adding the state option ZERO_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to make unknown regions hold null</span><br><span class="line">WARNING | 2022-01-18 21:18:25,841 | angr.storage.memory_mixins.default_filler_mixin | 3) adding the state option SYMBOL_FILL_UNCONSTRAINED_&#123;MEMORY,REGISTERS&#125;, to suppress these messages.</span><br><span class="line">WARNING | 2022-01-18 21:18:25,841 | angr.storage.memory_mixins.default_filler_mixin | Filling register ebp with 4 unconstrained bytes referenced from 0x804890e (main+0x26 in 03_angr_symbolic_registers (0x804890e))</span><br><span class="line">CRITICAL | 2022-01-18 21:18:26,340 | angr.sim_state | The name state.se is deprecated; please use state.solver.</span><br><span class="line">cfcdef7a 968d69bd c66a3c12</span><br></pre></td></tr></table></figure>
+
+<p>这一题我们学到了如何符号化寄存器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bit_length = <span class="number">32</span></span><br><span class="line">psd0 = claripy.BVS(<span class="string">&#x27;psd0&#x27;</span>, bit_length)</span><br><span class="line">initial_state.regs.eax = psd0</span><br></pre></td></tr></table></figure>
+
+<p>这段代码将eax寄存器符号化为一个32位的位向量，int刚好就是32位的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start_addr = <span class="number">0x0804890E</span></span><br><span class="line">initial_state = project.factory.blank_state(addr=start_addr)</span><br></pre></td></tr></table></figure>
+
+<p>这一段代码将项目的开始地址设置为0x0804890E</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/17/CSAPP%E7%AC%AC%E4%B8%89%E7%AB%A0%E5%B0%8F%E7%BB%93/" rel="prev" title="CSAPP第三章小结">
+      <i class="fa fa-chevron-left"></i> CSAPP第三章小结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#00-angr-find"><span class="nav-number">1.</span> <span class="nav-text">00_angr_find</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#01-angr-avoid"><span class="nav-number">2.</span> <span class="nav-text">01_angr_avoid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#02-angr-find-condition"><span class="nav-number">3.</span> <span class="nav-text">02_angr_find_condition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#03-angr-symbolic-registers"><span class="nav-number">4.</span> <span class="nav-text">03_angr_symbolic_registers</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
