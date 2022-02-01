@@ -145,6 +145,297 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/" class="post-title-link" itemprop="url">CSAPP第七章</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-29 21:39:20" itemprop="dateCreated datePublished" datetime="2022-01-29T21:39:20+08:00">2022-01-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-01 17:20:34" itemprop="dateModified" datetime="2022-02-01T17:20:34+08:00">2022-02-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="7-1、编译器驱动程序"><a href="#7-1、编译器驱动程序" class="headerlink" title="7.1、编译器驱动程序"></a>7.1、编译器驱动程序</h2><p>编译器驱动程序可以理解为一个软件包，像linux中常用的gcc，它可以自动完成程序的预处理、编译、汇编、链接</p>
+<p>先看两个示例程序：</p>
+<p><strong>main.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> n)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">2</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val = sum(<span class="built_in">array</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">return</span> val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>sum.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, s = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s += a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在linux环境下使用命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gcc -Og -o prog main.c sum.c</span></span><br></pre></td></tr></table></figure>
+
+<p>运行prog，程序返回3</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; ./prog</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7 [3]&gt; </span><br></pre></td></tr></table></figure>
+
+<p>prog的生成过程如图所示：</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220129214757950.png" class="" title="image-20220129214757950">
+
+<p>在这里gcc就是一个编译器驱动程序，它自动调用了cpp、cc1、as、ld等程序</p>
+<h2 id="7-2、静态链接"><a href="#7-2、静态链接" class="headerlink" title="7.2、静态链接"></a>7.2、静态链接</h2><p>由ld完成，链接器主要做两件事：</p>
+<ol>
+<li>符号解析</li>
+<li>重定位</li>
+</ol>
+<h2 id="7-3、目标文件"><a href="#7-3、目标文件" class="headerlink" title="7.3、目标文件"></a>7.3、目标文件</h2><p>目标文件有三种类型：</p>
+<ol>
+<li>可重定位目标文件，一般以.o结尾</li>
+<li>可执行文件，一般以,out结尾</li>
+<li>共享目标文件，一般以.so结尾</li>
+</ol>
+<p>可重定位和共享目标文件由编译器和汇编器生成，可执行目标文件由链接器生成</p>
+<h2 id="7-4、可重定位目标文件"><a href="#7-4、可重定位目标文件" class="headerlink" title="7.4、可重定位目标文件"></a>7.4、可重定位目标文件</h2><img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220129220524465.png" class="" title="image-20220129220524465">
+
+<p>一个典型的ELF可重定位目标文件格式如图所示</p>
+<ol>
+<li>ELF头：包含可重定位目标文件的大概信息</li>
+<li>节头部表：包含可重定位目标文件的各个节的信息</li>
+<li>.text段：代码段</li>
+<li>.rodata段：只读数据段</li>
+<li>.data段：数据段，存放初始化的全局变量和静态变量</li>
+<li>.bss段：数据段，存放未初始化和初始化为零的全局变量和静态变量</li>
+<li>.symtab段：符号表，保存全局变量的符号以及函数名称</li>
+<li>.rel.text段：代码段的重定位信息</li>
+<li>.rel.data段：数据段的重定位信息</li>
+<li>.debug段：调试信息</li>
+<li>.line段：源代码和机器代码的行号映射关系</li>
+<li>.strtab段：字符串表</li>
+</ol>
+<h2 id="7-5、符号和符号表"><a href="#7-5、符号和符号表" class="headerlink" title="7.5、符号和符号表"></a>7.5、符号和符号表</h2><p>在链接器的上下文中有三种不同的符号：</p>
+<ol>
+<li>由本模块定义并能由其他模块引用的全局符号</li>
+<li>由其他模块定义并能被本模块引用的全局符号</li>
+<li>只被本模块定义和引用的局部符号</li>
+</ol>
+<p>static前缀代表该变量是私有的，如果在多个函数中定义同名的static变量，编译器会为其生成不同的符号</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220129223819540.png" class="" title="image-20220129223819540">
+
+<ol>
+<li>name：表示在符号表中的下标</li>
+<li>type：函数或者数据</li>
+<li>binding：本地或者全局</li>
+<li>value：相对于本节区头的偏移</li>
+</ol>
+<p>符号表中的每个条目的组成如图所示，使用 <strong>readelf -s</strong> 可以查看我们之前生成的prog程序的符号表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7 [1]&gt; readelf -s prog</span><br><span class="line"></span><br><span class="line">Symbol table &#x27;.dynsym&#x27; contains 6 entries:</span><br><span class="line">   Num:    Value          Size Type    Bind   Vis      Ndx Name</span><br><span class="line">     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND </span><br><span class="line">     1: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab</span><br><span class="line">     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.2.5 (2)</span><br><span class="line">     3: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__</span><br><span class="line">     4: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable</span><br><span class="line">     5: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@GLIBC_2.2.5 (2)</span><br><span class="line"></span><br><span class="line">Symbol table &#x27;.symtab&#x27; contains 65 entries:</span><br><span class="line">   Num:    Value          Size Type    Bind   Vis      Ndx Name</span><br><span class="line">     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND </span><br><span class="line">     1: 0000000000000318     0 SECTION LOCAL  DEFAULT    1 </span><br><span class="line">     2: 0000000000000338     0 SECTION LOCAL  DEFAULT    2 </span><br><span class="line">     3: 0000000000000358     0 SECTION LOCAL  DEFAULT    3 </span><br><span class="line">     4: 000000000000037c     0 SECTION LOCAL  DEFAULT    4 </span><br><span class="line">     5: 00000000000003a0     0 SECTION LOCAL  DEFAULT    5 </span><br><span class="line">     6: 00000000000003c8     0 SECTION LOCAL  DEFAULT    6 </span><br><span class="line">     7: 0000000000000458     0 SECTION LOCAL  DEFAULT    7 </span><br><span class="line">     8: 00000000000004d6     0 SECTION LOCAL  DEFAULT    8 </span><br><span class="line">     9: 00000000000004e8     0 SECTION LOCAL  DEFAULT    9 </span><br><span class="line">    10: 0000000000000508     0 SECTION LOCAL  DEFAULT   10 </span><br><span class="line">    11: 0000000000001000     0 SECTION LOCAL  DEFAULT   11 </span><br><span class="line">    12: 0000000000001020     0 SECTION LOCAL  DEFAULT   12 </span><br><span class="line">    13: 0000000000001030     0 SECTION LOCAL  DEFAULT   13 </span><br><span class="line">    14: 0000000000001040     0 SECTION LOCAL  DEFAULT   14 </span><br><span class="line">    15: 00000000000011e8     0 SECTION LOCAL  DEFAULT   15 </span><br><span class="line">    16: 0000000000002000     0 SECTION LOCAL  DEFAULT   16 </span><br><span class="line">    17: 0000000000002004     0 SECTION LOCAL  DEFAULT   17 </span><br><span class="line">    18: 0000000000002048     0 SECTION LOCAL  DEFAULT   18 </span><br><span class="line">    19: 0000000000003df0     0 SECTION LOCAL  DEFAULT   19 </span><br><span class="line">    20: 0000000000003df8     0 SECTION LOCAL  DEFAULT   20 </span><br><span class="line">    21: 0000000000003e00     0 SECTION LOCAL  DEFAULT   21 </span><br><span class="line">    22: 0000000000003fc0     0 SECTION LOCAL  DEFAULT   22 </span><br><span class="line">    23: 0000000000004000     0 SECTION LOCAL  DEFAULT   23 </span><br><span class="line">    24: 0000000000004018     0 SECTION LOCAL  DEFAULT   24 </span><br><span class="line">    25: 0000000000000000     0 SECTION LOCAL  DEFAULT   25 </span><br><span class="line">    26: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c</span><br><span class="line">    27: 0000000000001070     0 FUNC    LOCAL  DEFAULT   14 deregister_tm_clones</span><br><span class="line">    28: 00000000000010a0     0 FUNC    LOCAL  DEFAULT   14 register_tm_clones</span><br><span class="line">    29: 00000000000010e0     0 FUNC    LOCAL  DEFAULT   14 __do_global_dtors_aux</span><br><span class="line">    30: 0000000000004018     1 OBJECT  LOCAL  DEFAULT   24 completed.8061</span><br><span class="line">    31: 0000000000003df8     0 OBJECT  LOCAL  DEFAULT   20 __do_global_dtors_aux_fin</span><br><span class="line">    32: 0000000000001120     0 FUNC    LOCAL  DEFAULT   14 frame_dummy</span><br><span class="line">    33: 0000000000003df0     0 OBJECT  LOCAL  DEFAULT   19 __frame_dummy_init_array_</span><br><span class="line">    34: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS main.c</span><br><span class="line">    35: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS sum.c</span><br><span class="line">    36: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c</span><br><span class="line">    37: 0000000000002144     0 OBJECT  LOCAL  DEFAULT   18 __FRAME_END__</span><br><span class="line">    38: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS </span><br><span class="line">    39: 0000000000003df8     0 NOTYPE  LOCAL  DEFAULT   19 __init_array_end</span><br><span class="line">    40: 0000000000003e00     0 OBJECT  LOCAL  DEFAULT   21 _DYNAMIC</span><br><span class="line">    41: 0000000000003df0     0 NOTYPE  LOCAL  DEFAULT   19 __init_array_start</span><br><span class="line">    42: 0000000000002004     0 NOTYPE  LOCAL  DEFAULT   17 __GNU_EH_FRAME_HDR</span><br><span class="line">    43: 0000000000003fc0     0 OBJECT  LOCAL  DEFAULT   22 _GLOBAL_OFFSET_TABLE_</span><br><span class="line">    44: 0000000000001000     0 FUNC    LOCAL  DEFAULT   11 _init</span><br><span class="line">    45: 00000000000011e0     5 FUNC    GLOBAL DEFAULT   14 __libc_csu_fini</span><br><span class="line">    46: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab</span><br><span class="line">    47: 0000000000004000     0 NOTYPE  WEAK   DEFAULT   23 data_start</span><br><span class="line">    48: 0000000000004010     8 OBJECT  GLOBAL DEFAULT   23 array</span><br><span class="line">    49: 0000000000004018     0 NOTYPE  GLOBAL DEFAULT   23 _edata</span><br><span class="line">    50: 00000000000011e8     0 FUNC    GLOBAL HIDDEN    15 _fini</span><br><span class="line">    51: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_</span><br><span class="line">    52: 0000000000004000     0 NOTYPE  GLOBAL DEFAULT   23 __data_start</span><br><span class="line">    53: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__</span><br><span class="line">    54: 0000000000004008     0 OBJECT  GLOBAL HIDDEN    23 __dso_handle</span><br><span class="line">    55: 0000000000001147    32 FUNC    GLOBAL DEFAULT   14 sum</span><br><span class="line">    56: 0000000000002000     4 OBJECT  GLOBAL DEFAULT   16 _IO_stdin_used</span><br><span class="line">    57: 0000000000001170   101 FUNC    GLOBAL DEFAULT   14 __libc_csu_init</span><br><span class="line">    58: 0000000000004020     0 NOTYPE  GLOBAL DEFAULT   24 _end</span><br><span class="line">    59: 0000000000001040    47 FUNC    GLOBAL DEFAULT   14 _start</span><br><span class="line">    60: 0000000000004018     0 NOTYPE  GLOBAL DEFAULT   24 __bss_start</span><br><span class="line">    61: 0000000000001129    30 FUNC    GLOBAL DEFAULT   14 main</span><br><span class="line">    62: 0000000000004018     0 OBJECT  GLOBAL HIDDEN    23 __TMC_END__</span><br><span class="line">    63: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable</span><br><span class="line">    64: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@@GLIBC_2.2</span><br></pre></td></tr></table></figure>
+
+<p>COMMON和.bss的区别：</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220129224728917.png" class="" title="image-20220129224728917">
+
+
+
+<h2 id="7-6、符号解析"><a href="#7-6、符号解析" class="headerlink" title="7.6、符号解析"></a>7.6、符号解析</h2><p>符号解析是链接器的工作，编译器为程序生成符号，链接器通过解析这些符号来确定程序中的引用</p>
+<p>对于局部符号，编译器直接生成与原来一样的符号，但是对于全局符号，这个过程就比较复杂，因为在全局符号中可能存在一样的符号</p>
+<p>C++中的函数重载就涉及这个问题，两个函数有一样的函数名，但确实是不同的函数，C++的编译器使用了一种叫做符号修饰的方法</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130132342288.png" class="" title="image-20220130132342288">
+
+<h3 id="7-6-1、链接器如何解析多重定义的全局符号"><a href="#7-6-1、链接器如何解析多重定义的全局符号" class="headerlink" title="7.6.1、链接器如何解析多重定义的全局符号"></a>7.6.1、链接器如何解析多重定义的全局符号</h3><p>编译器输出的符号分为强符号和弱符号</p>
+<p>函数和已初始化的全局变量是强符号，未初始化的全局变量是弱符号</p>
+<p>当一个程序中存在多重定义的全局符号时，链接器遵循以下原则：</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130135928922.png" class="" title="image-20220130135928922">
+
+<h3 id="7-6-2、与静态库链接"><a href="#7-6-2、与静态库链接" class="headerlink" title="7.6.2、与静态库链接"></a>7.6.2、与静态库链接</h3><p>静态库相当于一个模块的集合，使用静态链接是，链接器会将程序中引用的模块从静态库中链接出来，而程序中没有引用的模块，链接器则不做处理</p>
+<p><strong>addvec.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> addcnt = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addvec</span><span class="params">(<span class="keyword">int</span> *x, <span class="keyword">int</span> *y, <span class="keyword">int</span> *z, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    addcnt++;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">0</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        z[i] = x[i] + y[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>multvec.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> multcnt = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">multvec</span><span class="params">(<span class="keyword">int</span> *x, <span class="keyword">int</span> *y, <span class="keyword">int</span> *z, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    multcnt++;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        z[i] = x[i] * y[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用ar将这两个模块合并到一个静态库中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; gcc -c addvec.c multvec.c </span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; ar rcs libvector.a addvec.o multvec.o</span><br></pre></td></tr></table></figure>
+
+<p>使用nm查看libvector.a中的符号：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; nm libvector.a </span><br><span class="line"></span><br><span class="line">addvec.o:</span><br><span class="line">0000000000000000 B addcnt</span><br><span class="line">0000000000000000 T addvec</span><br><span class="line"></span><br><span class="line">multvec.o:</span><br><span class="line">0000000000000000 B multcnt</span><br><span class="line">0000000000000000 T multvec</span><br></pre></td></tr></table></figure>
+
+<p><strong>vector.h</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addvec</span><span class="params">(<span class="keyword">int</span> *x, <span class="keyword">int</span> *y, <span class="keyword">int</span> *z, <span class="keyword">int</span> n)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">multvec</span><span class="params">(<span class="keyword">int</span> *x, <span class="keyword">int</span> *y, <span class="keyword">int</span> *z, <span class="keyword">int</span> n)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>在main函数中引用addvec函数，最后静态链接起来</p>
+<p><strong>main2.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&quot;vector.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> x[<span class="number">2</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> y[<span class="number">2</span>] = &#123;<span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> z[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    addvec(x, y, z, <span class="number">2</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;z = [%d, %d]\n&quot;</span>, z[<span class="number">0</span>], z[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; gcc -c main2.c</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; gcc -static -o prog2 main2.o ./libvector.a</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; ./prog2</span><br><span class="line">z = [4, 6]</span><br></pre></td></tr></table></figure>
+
+<p>链接过程中，gcc只会将addvec模块链接进程序，而不会理会multvec，这大大减小了程序占用的磁盘空间和运行时的内存</p>
+<p>prog2的生成过程：</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130194449949.png" class="" title="image-20220130194449949">
+
+<h3 id="7-6-2、链接器如何使用静态库来解析引用"><a href="#7-6-2、链接器如何使用静态库来解析引用" class="headerlink" title="7.6.2、链接器如何使用静态库来解析引用"></a>7.6.2、链接器如何使用静态库来解析引用</h3><p>需要注意的是：使用编译器驱动程序生成可执行程序时，命令行中文件的顺序是有要求的，符号的引用必须在定义之前</p>
+<p>假设main.c引用了libx.a存档中的符号，那么在命令行中，main.c和libx.c的顺序必须是main.c在前，否则会产生报错</p>
+<h2 id="7-7、重定位"><a href="#7-7、重定位" class="headerlink" title="7.7、重定位"></a>7.7、重定位</h2><p>重定位分为两步：</p>
+<ol>
+<li>重定位节和符号定义</li>
+<li>重定位节中的符号引用</li>
+</ol>
+<h3 id="7-7-1、重定位条目"><a href="#7-7-1、重定位条目" class="headerlink" title="7.7.1、重定位条目"></a>7.7.1、重定位条目</h3><p>重定位条目是由汇编器生成的，指导链接器完成符号引用的重定位，.text的重定位条目位于.rel.text</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130200519697.png" class="" title="image-20220130200519697">
+
+
+
+<p>重定位条目中的每个元素如图所示</p>
+<p>下图是elf文件中最基本的两种重定位类型，第一种可以理解为偏移地址重定位，第二种可以理解为绝对地址重定位</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130200658026.png" class="" title="image-20220130200658026">
+
+<h3 id="7-7-2、重定位符号引用"><a href="#7-7-2、重定位符号引用" class="headerlink" title="7.7.2、重定位符号引用"></a>7.7.2、重定位符号引用</h3><p>重定位算法如图所示：</p>
+<p>遍历节区和节区中的重定位条目，然后计算重定位符号引用的地址，然后根据重定位类型进入不同的if语句块</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130203337366.png" class="" title="image-20220130203337366">
+
+
+
+<h2 id="7-8、可执行目标文件"><a href="#7-8、可执行目标文件" class="headerlink" title="7.8、可执行目标文件"></a>7.8、可执行目标文件</h2><img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130204219349.png" class="" title="image-20220130204219349">
+
+<p>可执行目标文件被映射到内存中时，相同权限的节区会被映射到一个段，上图的文件在内存中的段布局：</p>
+<p>一个只读段，一个可读可写段</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130210041634.png" class="" title="image-20220130210041634">
+
+<h2 id="7-9、加载可执行目标文件"><a href="#7-9、加载可执行目标文件" class="headerlink" title="7.9、加载可执行目标文件"></a>7.9、加载可执行目标文件</h2><p>可执行文件加载到内存后，会在内存中生成一个映像，这个映像中不仅有可执行文件的副本，还有诸如堆、栈等运行时所需结构</p>
+<p>以及共享库和内核的代码，加载的过程由加载器完成，它将可执行文件的内容复制到内存中并将控制权转交给程序</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130210750870.png" class="" title="image-20220130210750870">
+
+
+
+<h2 id="7-10、动态链接共享库"><a href="#7-10、动态链接共享库" class="headerlink" title="7.10、动态链接共享库"></a>7.10、动态链接共享库</h2><p>还记得我们之前使用过的示例程序吗？</p>
+<p>这一次我们让其使用共享库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; gcc -shared -fpic -o libcvector.so addvec.c multvec.c </span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; gcc -o prog21 main2.c ./libcvector.so </span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/c/chapter7&gt; ./prog21</span><br><span class="line">z = [4, 6]</span><br></pre></td></tr></table></figure>
+
+<p>程序的构建和运行过程如图所示：</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130212706853.png" class="" title="image-20220130212706853">
+
+<p>相比于静态链接，动态链接更节省空间和内存，动态链接库一直保存在内存中，当有程序应用共享库中的模块时，它可以在自己的虚拟空间创建共享库的副本，程序结束后，这个副本也随之消失，就是说内存中只需要保留一份共享库代码就i可以供所有程序使用</p>
+<p>如图所示，在形成可执行目标文件时，并不会有libc.so和libvector.so的代码被复制到可执行文件中，链接器只是重定位main2.o中的符号引用</p>
+<p>在程序运行时，动态链接器将libc.so和libvector.so的代码复制到本进程的虚拟空间，然后重定位可执行文件中的符号引用，最后将控制权转交给程序</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220130214906367.png" class="" title="image-20220130214906367">
+
+
+
+<h2 id="7-11、从应用程序中加载和链接共享库"><a href="#7-11、从应用程序中加载和链接共享库" class="headerlink" title="7.11、从应用程序中加载和链接共享库"></a>7.11、从应用程序中加载和链接共享库</h2><p>C和C++提供了几个函数，可以在程序运行过程中加载和链接共享库，并在使用完之后卸载</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201132634494.png" class="" title="image-20220201132634494">
+
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201132652607.png" class="" title="image-20220201132652607">
+
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201132729805.png" class="" title="image-20220201132729805">
+
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201132743621.png" class="" title="image-20220201132743621">
+
+<p>示例程序：</p>
+<p><strong>prog2r.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;dlfcn.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> x[<span class="number">2</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> y[<span class="number">2</span>] = &#123;<span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> z[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">void</span> *handle;</span><br><span class="line">    <span class="keyword">void</span> (*addvec)(<span class="keyword">int</span> *, <span class="keyword">int</span> *, <span class="keyword">int</span>*, <span class="keyword">int</span>);</span><br><span class="line">    <span class="keyword">char</span> *error;</span><br><span class="line"></span><br><span class="line">    handle = dlopen(<span class="string">&quot;/home/yiqiu/Codefile/csapp/chapter7/libcvector.so&quot;</span>, RTLD_LAZY); <span class="comment">//加载共享库</span></span><br><span class="line">    <span class="keyword">if</span>(!handle) <span class="comment">//判断是否加载成功</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;%s\n&quot;</span>, dlerror());</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    addvec = dlsym(handle, <span class="string">&quot;addvec&quot;</span>); <span class="comment">//引用共享库中的符号</span></span><br><span class="line">    <span class="keyword">if</span>((error = dlerror()) != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;%s\n&quot;</span>, error);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    addvec(x, y, z, <span class="number">2</span>); <span class="comment">//调用共享库中的函数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(dlclose(handle) &lt; <span class="number">0</span>) <span class="comment">//卸载共享库</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;%s\n&quot;</span>, dlerror());</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp [1]&gt; gcc -rdynamic -o prog2r.out prog2r.c -ldl</span><br></pre></td></tr></table></figure>
+
+<p>java调用本地C/C++函数的实现方法：</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201133154258.png" class="" title="image-20220201133154258">
+
+<h2 id="7-12、位置无关代码"><a href="#7-12、位置无关代码" class="headerlink" title="7.12、位置无关代码"></a>7.12、位置无关代码</h2><p>位置无关代码的作用是允许多个进程使用一个共享库代码的副本而不造成内存浪费，在gcc编译时使用-fpic选项指定生成位置无关代码</p>
+<p>1、PIC数据引用</p>
+<p>在共享库中，数据和代码的之间偏移是固定的，共享库中的代码被动态连接到内存中时，动态链接器还会根据一个全局偏移量表（GOT）来重定位代码中的数据引用</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201151603208.png" class="" title="image-20220201151603208">
+
+<p>2、PIC函数调用</p>
+<img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201152227790.png" class="" title="image-20220201152227790">
+
+<p>PIC函数调用通过GOT表、PLT表和延迟绑定机制来实现</p>
+<p>函数没有被调用前，GOT表中的地址并不是函数的真正地址，而是对应PIL表中的第二条代码，函数第一次被调用时，经过一系列操作，会将函数的真实地址写入GOT表，以后调用时就可知直接跳转到函数的地址了</p>
+<p><strong>第一次调用addvec</strong></p>
+<ol>
+<li>call指令调用函数</li>
+<li>跳转到PLT表</li>
+<li>跳转到GOT表指定的位置，即PLT表中的下一条指令</li>
+<li>pushq压入addvec函数的序号</li>
+<li>跳转到PLT[0]</li>
+<li>调用动态加载器</li>
+<li>执行函数并将函数的地址写入GOT表</li>
+</ol>
+<p><strong>第二次调用addvec</strong></p>
+<ol>
+<li>call指令调用函数</li>
+<li>跳转到PLT表</li>
+<li>跳转到GOT表指定的位置，即函数位置</li>
+</ol>
+<h2 id="7-13、库打桩机制"><a href="#7-13、库打桩机制" class="headerlink" title="7.13、库打桩机制"></a>7.13、库打桩机制</h2><p>按书中的描述，打桩就是hook，将库函数更换为你自己编写的函数</p>
+<h3 id="7-13-1、编译时打桩"><a href="#7-13-1、编译时打桩" class="headerlink" title="7.13.1、编译时打桩"></a>7.13.1、编译时打桩</h3><p>示例代码：</p>
+<p><strong>int.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;malloc.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *p = <span class="built_in">malloc</span>(<span class="number">32</span>);</span><br><span class="line">    <span class="built_in">free</span>(p);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>malloc.h</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> malloc(size) mymalloc(size)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> free(ptr) myfree(ptr)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">mymalloc</span><span class="params">(<span class="keyword">size_t</span> size)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myfree</span><span class="params">(<span class="keyword">void</span> *ptr)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>mymalloc.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> COMPILETIME</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;malloc.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">mymalloc</span><span class="params">(<span class="keyword">size_t</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">void</span> *ptr = <span class="built_in">malloc</span>(size);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;malloc(%d)=%p\n&quot;</span>, (<span class="keyword">int</span>)size, ptr);</span><br><span class="line">    <span class="keyword">return</span> ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myfree</span><span class="params">(<span class="keyword">void</span> *ptr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">free</span>(ptr);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;free(%p)\n&quot;</span>, ptr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp [1]&gt; gcc -DCOMPILETIME -c mymalloc.c</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; gcc -I. -o intc int.c mymalloc.o</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; ./intc </span><br><span class="line">malloc(32)=0x55848446c2a0</span><br><span class="line">free(0x55848446c2a0)</span><br></pre></td></tr></table></figure>
+
+<p>关键代码在malloc.h中，将malloc函数替换为mymalloc函数，将free函数替换为myfree函数</p>
+<p>编译后，调用malloc函数就相当于调用mymalloc函数，free函数同理</p>
+<h3 id="7-13-2、链接时打桩"><a href="#7-13-2、链接时打桩" class="headerlink" title="7.13.2、链接时打桩"></a>7.13.2、链接时打桩</h3><p>使用–wrap f将f替换为__wrap_f，而__real_f会被替换为f</p>
+<p>修改mymalloc.c代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> LINKTIME</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;malloc.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span>* __wrap_malloc(<span class="keyword">size_t</span> size)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *ptr = __real_malloc(size);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;malloc(%d)=%p\n&quot;</span>, (<span class="keyword">int</span>)size, ptr);</span><br><span class="line">    <span class="keyword">return</span> ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> __wrap_free(<span class="keyword">void</span> *ptr)</span><br><span class="line">&#123;</span><br><span class="line">    __real_free(ptr);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;free(%p)\n&quot;</span>, ptr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; gcc -DLINKTIME -c mymalloc.c</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; gcc -c int.c </span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; gcc -WL,--wrap,malloc -WL,--wrap,free -o intl int.o mymalloc.o</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp [1]&gt; gcc -Wl,--wrap,malloc -Wl,--wrap,free -o intl int.o mymalloc.o</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; ./intl</span><br><span class="line">malloc(32)=0x55aa635022a0</span><br><span class="line">free(0x55aa635022a0)</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-13-3、运行时打桩"><a href="#7-13-3、运行时打桩" class="headerlink" title="7.13.3、运行时打桩"></a>7.13.3、运行时打桩</h3><p>编译时打桩需要源代码，链接时打桩需要目标文件，但是运行时打桩只需要可执行文件</p>
+<p>LD_PRELOAD环境变量可以设置可执行程序优先加载的共享库</p>
+<p>修改mymalloc.c的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> RUNTIME</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;dlfcn.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">malloc</span><span class="params">(<span class="keyword">size_t</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> calltimes; <span class="comment">//默认初始化为0</span></span><br><span class="line">    calltimes++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span>* (*mallocp)(<span class="keyword">size_t</span> size);</span><br><span class="line">    <span class="keyword">char</span> *error;</span><br><span class="line">    mallocp = dlsym(RTLD_NEXT, <span class="string">&quot;malloc&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>((error = dlerror()) != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fputs</span>(error, <span class="built_in">stderr</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">char</span> *ptr = mallocp(size);</span><br><span class="line">    <span class="keyword">if</span>(calltimes == <span class="number">1</span>) <span class="comment">//避免重复调用</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;malloc(%d)=%p\n&quot;</span>, (<span class="keyword">int</span>)size, ptr);</span><br><span class="line">    calltimes = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">free</span><span class="params">(<span class="keyword">void</span> *ptr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> calltimes;</span><br><span class="line">    calltimes++;</span><br><span class="line">    <span class="keyword">void</span> (*freep)(<span class="keyword">void</span> *) = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">char</span> *error;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(!ptr)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    freep = dlsym(RTLD_NEXT, <span class="string">&quot;free&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>((error = dlerror()) != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fputs</span>(error, <span class="built_in">stderr</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    freep(ptr);</span><br><span class="line">    <span class="keyword">if</span>(calltimes == <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;free(%p)\n&quot;</span>, ptr);</span><br><span class="line">    calltimes = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp [SIGSEGV]&gt; gcc -DRUNTIME -shared -fpic -o mymalloc.so mymalloc.c -ldl</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; gcc -o intr int.c</span><br><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/csapp&gt; LD_PRELOAD=./mymalloc.so ./intr</span><br><span class="line">malloc(32)=0x55ef433352a0</span><br><span class="line">free(0x55ef433352a0)</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-14、处理目标文件的工具"><a href="#7-14、处理目标文件的工具" class="headerlink" title="7.14、处理目标文件的工具"></a>7.14、处理目标文件的工具</h2><img src="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/image-20220201172032760.png" class="" title="image-20220201172032760">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/29/ida%E9%80%86%E5%90%91%E5%88%86%E6%9E%90main%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1254,100 +1545,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/13/CSAPP-%E7%AC%AC%E4%BA%8C%E7%AB%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/CSAPP-%E7%AC%AC%E4%BA%8C%E7%AB%A0/" class="post-title-link" itemprop="url">CSAPP 第二章</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-12-13 21:08:46" itemprop="dateCreated datePublished" datetime="2021-12-13T21:08:46+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-14 22:10:01" itemprop="dateModified" datetime="2021-12-14T22:10:01+08:00">2021-12-14</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="信息储存"><a href="#信息储存" class="headerlink" title="信息储存"></a>信息储存</h2><h3 id="进制"><a href="#进制" class="headerlink" title="进制"></a>进制</h3><p>日常生活中，我们习惯使用十进制，但是计算机领域使用最多的当属十六进制，并不是说计算机能读懂十六进制，计算机只能都懂二进制，但是十六进制和二进制的转换很方便，所以人们通常把计算机中的二进制数据转换为十六进制</p>
-<h3 id="字和字节"><a href="#字和字节" class="headerlink" title="字和字节"></a>字和字节</h3><p>计算机能处理的最小数据单位就是字节，字一般是二字节或者四字节，这个在不同的机器上不同，每台计算机都有自己的字长，实际上字长就是该机器指针的长度，也就是地址的长度，字长越大的机器，寻址能力也就越强</p>
-<h3 id="字节顺序"><a href="#字节顺序" class="headerlink" title="字节顺序"></a>字节顺序</h3><p>分为小端和大端，最近也出现了双端的字节序，但是最常见的还是小端，小端的含义就是，数据的存储按原始数据的高位存储在内存的高地址，原始数据的低位存放在内存的低位，通俗的说法是，你会发现内存中的数据是反过来存放的</p>
-<p>大端和小端都有各自的优点，具体使用那一种字节序只是习惯问题</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>C语言中字符串以0结尾，定义字符串时，C的编译器会默认在字符串的结尾加上一个0，否则可能会发生意想不到的错误</p>
-<p>常见的字符集有ascii和unicode两种，ascii使用16为，也就是两个字节来表示字符，而unicode使用32为，也就是四个字节来表示字符</p>
-<p>ascii对英文字母有较好的支持，而unicode支持的范围更加广泛</p>
-<h3 id="bool运算"><a href="#bool运算" class="headerlink" title="bool运算"></a>bool运算</h3><p>狭义的bool代数就是0和1的运算，C语言规定了按位与、按位或、取反、异或四种bool运算</p>
-<p>按位与：参与运算的两位都是1结果才为1，否则为0</p>
-<p>按位或：参与运算的两位都是0结果才为0，否则为1</p>
-<p>取反：1取反为0，0取反为1</p>
-<p>异或：参与运算的两位只有一位为1结果才为1，否则为0</p>
-<p>这四种运算都有一定的特性，如可以让一个数按位与0xFF将其高位全部置0，或者让一个数按位或0xFF使其低16为全部置1</p>
-<p>异或的特性包括：一个数异或自己得零，一个数异或0得自己，一个数异或另外一个数偶数次，结果还是这个数</p>
-<h3 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h3><p>C语言规定了逻辑与（&amp;&amp;），逻辑或（||），和逻辑非（！）</p>
-<p>在逻辑运算看来，非0的所有数都是1，1&amp;&amp;1 = 1，1&amp;&amp;0 = 0，0&amp;&amp;0 = 0</p>
-<p>1||1 = 1，1||0 = 1， 0||0 = 0，！1 = 0， ！0 = 1</p>
-<h3 id="移位运算"><a href="#移位运算" class="headerlink" title="移位运算"></a>移位运算</h3><p>C语言中有左移，逻辑右移和算数右移</p>
-<p>逻辑右移在左边置0，算术右移在左边置符号位</p>
-<h2 id="整数表示"><a href="#整数表示" class="headerlink" title="整数表示"></a>整数表示</h2><p>在C语言中，整数分为有符号数和无符号数，C语言的整数默认使用补码表示的，无符号数的所有位都是数值位，有符号数的最高位表示符号位，0为负数，1为整数，负数的补码是该书绝对值的补码取反再加一</p>
-<p>编程时，应当尽量避免无符号的使用，由于存在隐式的转换，使用无符号数在某些时候可能导致难以察觉的错误</p>
-<h2 id="整数运算"><a href="#整数运算" class="headerlink" title="整数运算"></a>整数运算</h2><p>大寄</p>
-<p>我其实也是迷迷糊糊看过去的，就记住一个吧，C语言中整数的运算时会溢出的</p>
-<p>还有就是整数的乘法和除法有的情况可以采用移位来进行优化</p>
-<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><p>就简单看了一下浮点数的表示，浮点数由三部分所组成：最高位是符号位，中间的exp是阶码，代表2的多少次幂，最后一部分是尾数</p>
-<p>浮点数的表示形式就是（-1）**s * 尾数*2**阶码</p>
-<p><img src="image-20211214220217692.png" alt="image-20211214220217692"></p>
-<p>注意：浮点数不能准确地表示所有小数</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>第二章就这些，了解了整数和浮点数的表示，在内存中的存储方式以及使用的时候应该注意些什么</p>
-<p>寄，牵扯到数学运算我就寄，太菜了</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1417,7 +1614,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
