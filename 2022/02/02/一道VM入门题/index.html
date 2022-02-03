@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="玩逆向半年了，还是菜的发慌，本来想RE和PWN双修，无奈发现精力跟不上，目前的想法是先把RE该学的学了，有空的话PWN的常规知识也要学一下，实话实说PWN有点难，学起来不如RE快 寒假在家闲，最近开始接触虚拟机逆向，从一道简单的虚拟机逆向开始 ida打开程序，在函数窗口搜索main，发现没有main函数，但是在invoke_main中发现了_main，跳过去发现是main函数里面有花指令，修一下就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一道VM入门题">
+<meta property="og:url" content="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="玩逆向半年了，还是菜的发慌，本来想RE和PWN双修，无奈发现精力跟不上，目前的想法是先把RE该学的学了，有空的话PWN的常规知识也要学一下，实话实说PWN有点难，学起来不如RE快 寒假在家闲，最近开始接触虚拟机逆向，从一道简单的虚拟机逆向开始 ida打开程序，在函数窗口搜索main，发现没有main函数，但是在invoke_main中发现了_main，跳过去发现是main函数里面有花指令，修一下就">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211002824.png">
+<meta property="og:image" content="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211200623.png">
+<meta property="og:image" content="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211936784.png">
+<meta property="og:image" content="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202212457496.png">
+<meta property="article:published_time" content="2022-02-02T13:01:44.000Z">
+<meta property="article:modified_time" content="2022-02-03T07:38:28.472Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211002824.png">
+
+<link rel="canonical" href="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>一道VM入门题 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一道VM入门题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-02 21:01:44" itemprop="dateCreated datePublished" datetime="2022-02-02T21:01:44+08:00">2022-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-03 15:38:28" itemprop="dateModified" datetime="2022-02-03T15:38:28+08:00">2022-02-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>玩逆向半年了，还是菜的发慌，本来想RE和PWN双修，无奈发现精力跟不上，目前的想法是先把RE该学的学了，有空的话PWN的常规知识也要学一下，实话实说PWN有点难，学起来不如RE快</p>
+<p>寒假在家闲，最近开始接触虚拟机逆向，从一道简单的虚拟机逆向开始</p>
+<p>ida打开程序，在函数窗口搜索main，发现没有main函数，但是在invoke_main中发现了_main，跳过去发现是main函数里面有花指令，修一下就好</p>
+<img src="/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211002824.png" class="" title="image-20220202211002824">
+
+<p>nop掉一个花指令，就可以反编译了</p>
+<img src="/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211200623.png" class="" title="image-20220202211200623">
+
+<p>main函数伪代码：</p>
+<p>这是我修改过后的伪代码，对一些变量的名称进行了修改，使伪代码更加易懂</p>
+<p>最外层是一个死循环，死循环中嵌套了一个小的for循环，for循环的作用是读取opcode与option_index进行比较，如果比较相同的话就退出for循环</p>
+<p>显然如果循环退出，那么接下来的option[i]调用的函数必定是opcode[vm_eip]对应的函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> i; <span class="comment">// [esp+10h] [ebp-8h]</span></span><br><span class="line"></span><br><span class="line">  sub_4F14F0();</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">LABEL_2:</span><br><span class="line">    <span class="keyword">for</span> ( i = <span class="number">0</span>; ; i += <span class="number">2</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( i &gt;= <span class="number">0x58</span> )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_2;</span><br><span class="line">      <span class="keyword">if</span> ( option_index[<span class="number">4</span> * i] == opcode[vm_eip] )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    option[i]();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以题目的关键就在于opcode以及其对应的option，我们进入option一个一个分析</p>
+<p>这里是我分析好的option，随便挑几个说一下</p>
+<img src="/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202211936784.png" class="" title="image-20220202211936784">
+
+<h3 id="vm-xor-reg"><a href="#vm-xor-reg" class="headerlink" title="vm_xor_reg"></a>vm_xor_reg</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">vm_xor_reg</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *v0; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">int</span> reg_index; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> result; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  v0 = reg[(<span class="keyword">unsigned</span> __int8)first[vm_eip]];</span><br><span class="line">  reg_index = (<span class="keyword">unsigned</span> __int8)second[vm_eip];</span><br><span class="line">  vm_eip += <span class="number">3</span>;</span><br><span class="line">  result = *reg[reg_index];</span><br><span class="line">  *v0 ^= result;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>vm_eip不用解释了吧，这是程序的计数器，在调试的时候可以推测出来</p>
+<p>那first和second又是什么呢？</p>
+<p>先看下面，有一条指令是vm_eip += 3，由此可以推断出一条opcode的长度是三个字节</p>
+<p>这些就是opcode，他们的组成是：option_index | first | second</p>
+<ol>
+<li>option_index：对应的option的编号</li>
+<li>first：前一个操作数</li>
+<li>second：后一个操作数</li>
+</ol>
+<img src="/2022/02/02/%E4%B8%80%E9%81%93VM%E5%85%A5%E9%97%A8%E9%A2%98/image-20220202212457496.png" class="" title="image-20220202212457496">
+
+<p>所以first[vm_eip]就相当于取前一个操作数，second同理</p>
+<p>reg是一个数组，我们在这里可以把它看成是寄存器数组</p>
+<p>变量都解释清楚了，那么这个函数的行为就显而易见了：</p>
+<p><strong>以first和second为下标取两个寄存器的值异或，并把结果放到第一个寄存器中</strong></p>
+<h3 id="vm-set-zflag"><a href="#vm-set-zflag" class="headerlink" title="vm_set_zflag"></a>vm_set_zflag</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_set_zflag</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *v0; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">int</span> reg_index; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  v0 = reg[(<span class="keyword">unsigned</span> __int8)second[vm_eip]];</span><br><span class="line">  reg_index = (<span class="keyword">unsigned</span> __int8)first[vm_eip];</span><br><span class="line">  vm_eip += <span class="number">3</span>;</span><br><span class="line">  vm_zflag = *reg[reg_index] - *v0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他的都解释过了，这个vm_zflag是怎么来的呢？</p>
+<p>我们查看vm_zflag的交叉引用，发现他出现在另一个函数中，在这个函数中，vm_zflag被当成了跳转的条件，所以推测这个变量是zflag，用两个数相减来得到zflag的值也合乎情理</p>
+<h3 id="vm-jz"><a href="#vm-jz" class="headerlink" title="vm_jz"></a>vm_jz</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">vm_jz</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> result; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( vm_zflag )</span><br><span class="line">  &#123;</span><br><span class="line">    vm_eip += <span class="number">3</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    result = <span class="number">3</span> * (<span class="keyword">unsigned</span> __int8)first[vm_eip] - <span class="number">3</span>;</span><br><span class="line">    vm_eip = result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="vm-push-reg"><a href="#vm-push-reg" class="headerlink" title="vm_push_reg"></a>vm_push_reg</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_push_reg</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> reg_index; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  reg_index = (<span class="keyword">unsigned</span> __int8)first[vm_eip];</span><br><span class="line">  ++stack_offset;</span><br><span class="line">  vm_eip += <span class="number">3</span>;</span><br><span class="line">  stack_base[stack_offset] = *(_BYTE *)reg[reg_index];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>stack_base也是根据调试推断出来的，有了这个名称，这个函数很容易就可以理解为push_reg</p>
+<p>分析这些option的时候，前面会很难懂，但是当你理解了一些变量代表的含义并赋予他们恰当的名字，后面的分析就可以变得很快</p>
+<p>一些变量的初始化：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">sub_4F14F0</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *v0; <span class="comment">// esi</span></span><br><span class="line"></span><br><span class="line">  input_len = <span class="number">0</span>;</span><br><span class="line">  yushu = <span class="number">0</span>;</span><br><span class="line">  dword_535BD4 = <span class="number">0</span>;</span><br><span class="line">  vm_zflag = <span class="number">0</span>;</span><br><span class="line">  stack_offset = <span class="number">0</span>;</span><br><span class="line">  dword_535BD0 = <span class="number">0</span>;</span><br><span class="line">  vm_eip = <span class="number">0</span>;</span><br><span class="line">  stack_base = <span class="built_in">malloc</span>(<span class="number">0x100</span>u);</span><br><span class="line">  v0 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x100</span>u);</span><br><span class="line">  input = v0;</span><br><span class="line">  <span class="built_in">memset</span>(stack_base, <span class="number">0</span>, <span class="number">0x100</span>u);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">memset</span>(v0, <span class="number">0</span>, <span class="number">0x100</span>u);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们要做的就是将opcode翻译成这些option，编写一个翻译脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">opcode = [<span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x03</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x11</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x11</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x0D</span>, <span class="number">0x0A</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0xFF</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x11</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0D</span>, <span class="number">0x2B</span>, <span class="number">0x00</span>, <span class="number">0x14</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x61</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x10</span>, <span class="number">0x1A</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x7A</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x0F</span>, <span class="number">0x1A</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x47</span>, <span class="number">0x0A</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x06</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x0B</span>, <span class="number">0x24</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x41</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x10</span>, <span class="number">0x24</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x5A</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x0F</span>, <span class="number">0x24</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x4B</span>, <span class="number">0x0A</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x07</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x10</span>, <span class="number">0x09</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x06</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x0B</span>, <span class="number">0x0B</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0D</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0D</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0F</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x09</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0F</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0B</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x02</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x13</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x04</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x0C</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x0E</span>, <span class="number">0x5B</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x22</span>, <span class="number">0x0C</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x0D</span>, <span class="number">0x59</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x06</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x0B</span>, <span class="number">0x4E</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0xFF</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0xFF</span>, <span class="number">0x00</span>, <span class="number">0x00</span>]</span><br><span class="line"><span class="comment"># print(len(opcode))</span></span><br><span class="line"></span><br><span class="line">eip = <span class="number">0</span></span><br><span class="line">stack_base = [<span class="number">0</span>] * <span class="number">0x100</span></span><br><span class="line">stack_offset = <span class="number">0</span></span><br><span class="line">input_len = <span class="number">0</span></span><br><span class="line">yushu = <span class="number">0</span></span><br><span class="line">zflag = <span class="number">0</span></span><br><span class="line"><span class="built_in">input</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x5d</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;%02d&#x27;</span> % (i+<span class="number">1</span>), end=<span class="string">&#x27;: &#x27;</span>)</span><br><span class="line">    each_opcode = opcode[eip:eip+<span class="number">3</span>]</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;nop&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">1</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;mov reg[%d], %d&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">2</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;push %d&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">3</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;push reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">4</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;pop reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">5</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;print message&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">6</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;add reg[%d], reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">7</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;sub reg[%d], reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">8</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;mul reg[%d], reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">9</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;div reg[%d], reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xa</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;xor reg[%d], reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xb</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;jmp %d&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xc</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;zflag = reg[%d] - reg[%d]&#x27;</span> % (each_opcode[<span class="number">1</span>] , each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xd</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;jz %d&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xe</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;jnz %d&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xf</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;jg %d&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0x10</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;jl %d&#x27;</span> % (each_opcode[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0x11</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;gets input&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0x12</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;memset(input[%d, 0, %d])&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0x13</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;load reg[%d], stack[reg[%d]]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0x14</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;load reg[%d], input[reg[%d]]&#x27;</span> % (each_opcode[<span class="number">1</span>], each_opcode[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">if</span> each_opcode[<span class="number">0</span>] == <span class="number">0xff</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;exit&#x27;</span>)</span><br><span class="line">    eip += <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>以下是翻译脚本的输出，我分析后添加了一些注释</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">01: mov reg[3], 3</span><br><span class="line">02: print message ;print p;z input:</span><br><span class="line"></span><br><span class="line">03: gets input    ;put input length into reg[0]</span><br><span class="line"></span><br><span class="line">04: mov reg[1], 17</span><br><span class="line">05: zflag = reg[0] - reg[1] ;input length shou be 17</span><br><span class="line">06: jz 10</span><br><span class="line"></span><br><span class="line">07: mov reg[3], 1</span><br><span class="line">08: print message ;print wrong</span><br><span class="line"></span><br><span class="line">09: exit</span><br><span class="line"></span><br><span class="line">10: mov reg[2], 0</span><br><span class="line">11: mov reg[0], 17</span><br><span class="line">12: zflag = reg[0] - reg[2] ;set cycle index to 17</span><br><span class="line">13: jz 43 </span><br><span class="line"></span><br><span class="line">14: load reg[0], input[reg[2]] ;mov each input byte to reg[0]</span><br><span class="line">15: mov reg[1], 97 ;ascii &#x27;a&#x27;</span><br><span class="line">16: zflag = reg[0] - reg[1] ;Determine whether the value is less than charactor &#x27;a&#x27;</span><br><span class="line">17: jl 26</span><br><span class="line"></span><br><span class="line">18: mov reg[1], 122 ;ascii &#x27;z&#x27;</span><br><span class="line">19: zflag = reg[0] - reg[1] ;Determine whether the value is more than charactor &#x27;z&#x27;</span><br><span class="line">20: jg 26</span><br><span class="line"></span><br><span class="line">21: mov reg[1], 71 ;input char is in &#x27;a&#x27; ~ &#x27;z&#x27;</span><br><span class="line">22: xor reg[0], reg[1]</span><br><span class="line">23: mov reg[1], 1</span><br><span class="line">24: add reg[0], reg[1] ;input char = (input char ^ 71) + 1 </span><br><span class="line">25: jmp 36</span><br><span class="line"></span><br><span class="line">26: mov reg[1], 65 ;ascii &#x27;A&#x27;</span><br><span class="line">27: zflag = reg[0] - reg[1]</span><br><span class="line">28: jl 36</span><br><span class="line"></span><br><span class="line">29: mov reg[1], 90 ;asscii &#x27;Z&#x27;</span><br><span class="line">30: zflag = reg[0] - reg[1]</span><br><span class="line">31: jg 36</span><br><span class="line"></span><br><span class="line">32: mov reg[1], 75 ;input char is in &#x27;A&#x27; ~ &#x27;Z&#x27;</span><br><span class="line">33: xor reg[0], reg[1]</span><br><span class="line">34: mov reg[1], 1</span><br><span class="line">35: sub reg[0], reg[1]</span><br><span class="line"></span><br><span class="line">36: mov reg[1], 16</span><br><span class="line">37: div reg[0], reg[1] ;input char / 16,  </span><br><span class="line">38: push reg[1] ;remainder</span><br><span class="line">39: push reg[0] ;consult</span><br><span class="line">40: mov reg[1], 1</span><br><span class="line">41: add reg[2], reg[1] ;next input char</span><br><span class="line">42: jmp 11</span><br><span class="line"></span><br><span class="line">43: push 7 ;compare data</span><br><span class="line">44: push 13</span><br><span class="line">45: push 0</span><br><span class="line">46: push 5</span><br><span class="line">47: push 1</span><br><span class="line">48: push 12</span><br><span class="line">49: push 1</span><br><span class="line">50: push 0</span><br><span class="line">51: push 0</span><br><span class="line">52: push 13</span><br><span class="line">53: push 5</span><br><span class="line">54: push 15</span><br><span class="line">55: push 0</span><br><span class="line">56: push 9</span><br><span class="line">57: push 5</span><br><span class="line">58: push 15</span><br><span class="line">59: push 3</span><br><span class="line">60: push 0</span><br><span class="line">61: push 2</span><br><span class="line">62: push 5</span><br><span class="line">63: push 3</span><br><span class="line">64: push 3</span><br><span class="line">65: push 1</span><br><span class="line">66: push 7</span><br><span class="line">67: push 7</span><br><span class="line">68: push 11</span><br><span class="line">69: push 2</span><br><span class="line">70: push 1</span><br><span class="line">71: push 2</span><br><span class="line">72: push 7</span><br><span class="line">73: push 2</span><br><span class="line">74: push 12</span><br><span class="line">75: push 2</span><br><span class="line">76: push 2</span><br><span class="line"></span><br><span class="line">77: mov reg[2], 1</span><br><span class="line">78: load reg[1], stack[reg[2]]</span><br><span class="line">79: pop reg[0]</span><br><span class="line">80: zflag = reg[0] - reg[1] ;compare input char</span><br><span class="line">81: jnz 91</span><br><span class="line"></span><br><span class="line">82: mov reg[1], 34</span><br><span class="line">83: zflag = reg[2] - reg[1] ;set cycle index 34</span><br><span class="line">84: jz 89</span><br><span class="line"></span><br><span class="line">85: mov reg[1], 1</span><br><span class="line">86: add reg[2], reg[1] ;compare next char</span><br><span class="line">87: jmp 78</span><br><span class="line"></span><br><span class="line">88: mov reg[3], 0 </span><br><span class="line">89: print message ;print right</span><br><span class="line">90: exit</span><br><span class="line"></span><br><span class="line">91: mov reg[3], 1</span><br><span class="line">92: print message ;print wrong</span><br><span class="line">93: exit</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>根据上面代码的逻辑写出模拟的python代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">compare_data = [<span class="number">2</span>, <span class="number">2</span>, <span class="number">12</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">11</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">15</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">15</span>, <span class="number">5</span>, <span class="number">13</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">12</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">13</span>, <span class="number">7</span>]</span><br><span class="line">flag = <span class="built_in">input</span>()</span><br><span class="line">result = []</span><br><span class="line">flag = [<span class="built_in">ord</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> flag]</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(flag) == <span class="number">17</span>:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> flag:</span><br><span class="line">        <span class="keyword">if</span> i &gt;= <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) <span class="keyword">and</span> i &lt;= <span class="built_in">ord</span>(<span class="string">&#x27;z&#x27;</span>):</span><br><span class="line">            i = ((i ^ <span class="number">71</span>) + <span class="number">1</span>) &amp; <span class="number">0xff</span></span><br><span class="line">        <span class="keyword">elif</span> i &gt;= <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) <span class="keyword">and</span> i &lt;= <span class="built_in">ord</span>(<span class="string">&#x27;Z&#x27;</span>):</span><br><span class="line">            i = ((i ^ <span class="number">75</span>) - <span class="number">1</span>) &amp; <span class="number">0xff</span></span><br><span class="line">        result.append(i % <span class="number">16</span>)</span><br><span class="line">        result.append(i // <span class="number">16</span>)</span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line">    <span class="keyword">if</span> result == compare_data:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;right&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;wrong&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;wrong&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>然后再写出解密脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">compare_data = [<span class="number">2</span>, <span class="number">2</span>, <span class="number">12</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">11</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">15</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">15</span>, <span class="number">5</span>, <span class="number">13</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">12</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">13</span>, <span class="number">7</span>]</span><br><span class="line">flag = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">34</span>, <span class="number">2</span>):</span><br><span class="line">    temp = compare_data[i] + compare_data[i+<span class="number">1</span>] * <span class="number">16</span></span><br><span class="line">    x = (temp - <span class="number">1</span>) ^ <span class="number">71</span></span><br><span class="line">    y = (temp + <span class="number">1</span>) ^ <span class="number">75</span></span><br><span class="line">    <span class="keyword">if</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">97</span>, <span class="number">123</span>):</span><br><span class="line">        flag += <span class="built_in">chr</span>(x)</span><br><span class="line">    <span class="keyword">elif</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">65</span>, <span class="number">91</span>):</span><br><span class="line">        flag += <span class="built_in">chr</span>(y)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        flag += <span class="built_in">chr</span>(temp)</span><br><span class="line"><span class="built_in">print</span>(flag)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yiqiu@LAPTOP-I2IQS5DP ~/C/ezvm&gt; python3 sim.py</span><br><span class="line">flag&#123;Such_A_EZVM&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>做完这道题，我对VM逆向有个大概的了解，VM的出题思路大致就是：编写一个指令集，设计一串opcode，实现一个将opcode和指令集联系起来的解释器</p>
+<p>所以我们的做题思路就是：逆向指令集，搞清楚每个操作对应的行为，提取opcode，写出一个小的反汇编器，将opcode反汇编成能看懂的文本格式，逆向这个文本格式的代码，写出解题脚本</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/29/CSAPP%E7%AC%AC%E4%B8%83%E7%AB%A0/" rel="prev" title="CSAPP第七章">
+      <i class="fa fa-chevron-left"></i> CSAPP第七章
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#vm-xor-reg"><span class="nav-number">1.</span> <span class="nav-text">vm_xor_reg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vm-set-zflag"><span class="nav-number">2.</span> <span class="nav-text">vm_set_zflag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vm-jz"><span class="nav-number">3.</span> <span class="nav-text">vm_jz</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vm-push-reg"><span class="nav-number">4.</span> <span class="nav-text">vm_push_reg</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number"></span> <span class="nav-text">总结</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
