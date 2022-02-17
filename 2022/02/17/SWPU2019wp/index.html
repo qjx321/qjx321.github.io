@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="题目地址：https:&#x2F;&#x2F;files.buuoj.cn&#x2F;files&#x2F;e9761f09f9aac733705d36db1305f015&#x2F;attachment.exe   使用file查看程序，是32的PE可执行文件，拖进IDA 这是main函数的伪代码： 如果第一次反编译的伪代码很奇怪，可以试着用IDA跑一遍程序，再次反编译的代码会清晰很多 main函数的逻辑很清晰，先是将输入与一个字符串循环异或，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SWPU2019wp">
+<meta property="og:url" content="http://example.com/2022/02/17/SWPU2019wp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="题目地址：https:&#x2F;&#x2F;files.buuoj.cn&#x2F;files&#x2F;e9761f09f9aac733705d36db1305f015&#x2F;attachment.exe   使用file查看程序，是32的PE可执行文件，拖进IDA 这是main函数的伪代码： 如果第一次反编译的伪代码很奇怪，可以试着用IDA跑一遍程序，再次反编译的代码会清晰很多 main函数的逻辑很清晰，先是将输入与一个字符串循环异或，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217170202414.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217173021503.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217173324894.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217173539165.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217173713068.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217173847732.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217173957563.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217174255390.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217174423037.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217174650793.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217174815088.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217175155775.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217175314851.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217175404881.png">
+<meta property="og:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217180301719.png">
+<meta property="article:published_time" content="2022-02-17T09:00:17.000Z">
+<meta property="article:modified_time" content="2022-02-17T10:05:27.498Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/02/17/SWPU2019wp/image-20220217170202414.png">
+
+<link rel="canonical" href="http://example.com/2022/02/17/SWPU2019wp/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>SWPU2019wp | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/17/SWPU2019wp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SWPU2019wp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-02-17 17:00:17 / Modified: 18:05:27" itemprop="dateCreated datePublished" datetime="2022-02-17T17:00:17+08:00">2022-02-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>题目地址：<a target="_blank" rel="noopener" href="https://files.buuoj.cn/files/e9761f09f9aac733705d36db1305f015/attachment.exe">https://files.buuoj.cn/files/e9761f09f9aac733705d36db1305f015/attachment.exe</a></p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217170202414.png" class="" title="image-20220217170202414">
+
+<p>使用file查看程序，是32的PE可执行文件，拖进IDA</p>
+<p>这是main函数的伪代码：</p>
+<p>如果第一次反编译的伪代码很奇怪，可以试着用IDA跑一遍程序，再次反编译的代码会清晰很多</p>
+<p>main函数的逻辑很清晰，先是将输入与一个字符串循环异或，然后将异或后的结果传入encrypt函数，encrypt函数返回后将加密后的数据与比较数据进行比较</p>
+<p>所以接下来的重点就是分析encrypt函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v3; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">int</span> *v4; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">int</span> *v6; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">char</span> *v7; <span class="comment">// esi</span></span><br><span class="line">  <span class="keyword">int</span> v8; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> len; <span class="comment">// kr00_4</span></span><br><span class="line">  <span class="keyword">char</span> *v10; <span class="comment">// ecx</span></span><br><span class="line">  __int128 *v11; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">int</span> *v12; <span class="comment">// ecx</span></span><br><span class="line">  __int128 *v13; <span class="comment">// edx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v14; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">int</span> v15; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v16; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">bool</span> v17; <span class="comment">// cf</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 v18; <span class="comment">// al</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 v19; <span class="comment">// al</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 v20; <span class="comment">// al</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *v21; <span class="comment">// edx</span></span><br><span class="line">  <span class="keyword">int</span> *v22; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">char</span> *v23; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v25; <span class="comment">// [esp-14h] [ebp-D8h]</span></span><br><span class="line">  <span class="keyword">int</span> v26; <span class="comment">// [esp-10h] [ebp-D4h]</span></span><br><span class="line">  <span class="keyword">void</span> *input[<span class="number">4</span>]; <span class="comment">// [esp+24h] [ebp-A0h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v28; <span class="comment">// [esp+34h] [ebp-90h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v29; <span class="comment">// [esp+38h] [ebp-8Ch]</span></span><br><span class="line">  __int128 cipher[<span class="number">2</span>]; <span class="comment">// [esp+3Ch] [ebp-88h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v31; <span class="comment">// [esp+5Ch] [ebp-68h]</span></span><br><span class="line">  __int128 text; <span class="comment">// [esp+60h] [ebp-64h] BYREF</span></span><br><span class="line">  __int128 v33; <span class="comment">// [esp+70h] [ebp-54h]</span></span><br><span class="line">  <span class="keyword">int</span> v34; <span class="comment">// [esp+80h] [ebp-44h]</span></span><br><span class="line">  <span class="keyword">char</span> key[<span class="number">16</span>]; <span class="comment">// [esp+84h] [ebp-40h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v36[<span class="number">8</span>]; <span class="comment">// [esp+94h] [ebp-30h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v37; <span class="comment">// [esp+C0h] [ebp-4h]</span></span><br><span class="line"></span><br><span class="line">  v28 = <span class="number">0</span>;</span><br><span class="line">  v29 = <span class="number">15</span>;</span><br><span class="line">  LOBYTE(input[<span class="number">0</span>]) = <span class="number">0</span>;</span><br><span class="line">  v37 = <span class="number">1</span>;</span><br><span class="line">  v4 = <span class="built_in">printf</span>(v3, <span class="string">&quot;Please input your flag: &quot;</span>);</span><br><span class="line">  sub_83050((<span class="keyword">int</span>)v4);</span><br><span class="line">  <span class="built_in">scanf</span>((<span class="keyword">int</span>)&amp;dword_B0068, input);</span><br><span class="line">  <span class="built_in">strcpy</span>(key, <span class="string">&quot;SWPU_2019_CTF&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> ( v28 == <span class="number">32</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v36[<span class="number">4</span>] = <span class="number">-1173078761</span>;</span><br><span class="line">    v36[<span class="number">5</span>] = <span class="number">494076752</span>;</span><br><span class="line">    v36[<span class="number">6</span>] = <span class="number">-1811652486</span>;</span><br><span class="line">    v36[<span class="number">7</span>] = <span class="number">688582768</span>;</span><br><span class="line">    v8 = <span class="number">0</span>;</span><br><span class="line">    text = <span class="number">0</span>i64;</span><br><span class="line">    v34 = <span class="number">0</span>;</span><br><span class="line">    v33 = <span class="number">0</span>i64;</span><br><span class="line">    len = <span class="built_in">strlen</span>(key);</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">      v10 = (<span class="keyword">char</span> *)input;</span><br><span class="line">      <span class="keyword">if</span> ( v29 &gt;= <span class="number">0x10</span> )</span><br><span class="line">        v10 = (<span class="keyword">char</span> *)input[<span class="number">0</span>];</span><br><span class="line">      v10[v8] ^= key[v8 % len];                 <span class="comment">// 与字符串异或</span></span><br><span class="line">      ++v8;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> ( v8 &lt; <span class="number">32</span> );</span><br><span class="line">    v11 = (__int128 *)input;</span><br><span class="line">    v7 = (<span class="keyword">char</span> *)input[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span> ( v29 &gt;= <span class="number">0x10</span> )</span><br><span class="line">      v11 = (__int128 *)input[<span class="number">0</span>];</span><br><span class="line">    v31 = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">memset</span>(cipher, <span class="number">0</span>, <span class="keyword">sizeof</span>(cipher));</span><br><span class="line">    text = *v11;</span><br><span class="line">    v33 = v11[<span class="number">1</span>];</span><br><span class="line">    encrypt(v25, v26, <span class="number">256</span>, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)&amp;text, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)cipher);</span><br><span class="line">    v36[<span class="number">0</span>] = <span class="number">-133220429</span>;</span><br><span class="line">    v36[<span class="number">1</span>] = <span class="number">1571732668</span>;</span><br><span class="line">    v12 = v36;</span><br><span class="line">    v36[<span class="number">2</span>] = <span class="number">-2041750854</span>;</span><br><span class="line">    v13 = cipher;</span><br><span class="line">    v36[<span class="number">3</span>] = <span class="number">-748513468</span>;</span><br><span class="line">    v14 = <span class="number">28</span>;</span><br><span class="line">    v36[<span class="number">4</span>] = <span class="number">371505743</span>;</span><br><span class="line">    v36[<span class="number">5</span>] = <span class="number">443719435</span>;</span><br><span class="line">    v36[<span class="number">6</span>] = <span class="number">644704357</span>;</span><br><span class="line">    v36[<span class="number">7</span>] = <span class="number">1741188026</span>;</span><br><span class="line">    <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v15 = *v12;</span><br><span class="line">      <span class="keyword">if</span> ( *v12 != *(_DWORD *)v13 )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      ++v12;</span><br><span class="line">      v13 = (__int128 *)((<span class="keyword">char</span> *)v13 + <span class="number">4</span>);</span><br><span class="line">      v17 = v14 &lt; <span class="number">4</span>;</span><br><span class="line">      v14 -= <span class="number">4</span>;</span><br><span class="line">      <span class="keyword">if</span> ( v17 )</span><br><span class="line">      &#123;</span><br><span class="line">        v16 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">goto</span> LABEL_19;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    v17 = (<span class="keyword">unsigned</span> __int8)v15 &lt; *(_BYTE *)v13;</span><br><span class="line">    <span class="keyword">if</span> ( (_BYTE)v15 == *(_BYTE *)v13</span><br><span class="line">      &amp;&amp; (v18 = *((_BYTE *)v12 + <span class="number">1</span>), v17 = v18 &lt; *((_BYTE *)v13 + <span class="number">1</span>), v18 == *((_BYTE *)v13 + <span class="number">1</span>))</span><br><span class="line">      &amp;&amp; (v19 = *((_BYTE *)v12 + <span class="number">2</span>), v17 = v19 &lt; *((_BYTE *)v13 + <span class="number">2</span>), v19 == *((_BYTE *)v13 + <span class="number">2</span>))</span><br><span class="line">      &amp;&amp; (v20 = *((_BYTE *)v12 + <span class="number">3</span>), v17 = v20 &lt; *((_BYTE *)v13 + <span class="number">3</span>), v20 == *((_BYTE *)v13 + <span class="number">3</span>)) )</span><br><span class="line">    &#123;</span><br><span class="line">      v16 = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      v16 = v17 ? <span class="number">-1</span> : <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">LABEL_19:</span><br><span class="line">    <span class="keyword">if</span> ( v16 )</span><br><span class="line">      v21 = <span class="string">&quot;Try again!\r\n&quot;</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      v21 = <span class="string">&quot;Congratulations! I always knew you could do it.&quot;</span>;</span><br><span class="line">    v22 = <span class="built_in">printf</span>((<span class="keyword">int</span>)v12, v21);</span><br><span class="line">    sub_83050((<span class="keyword">int</span>)v22);</span><br><span class="line">    sub_8ADBE(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    v6 = <span class="built_in">printf</span>(v5, <span class="string">&quot;Try again!\r\n&quot;</span>);</span><br><span class="line">    sub_83050((<span class="keyword">int</span>)v6);</span><br><span class="line">    sub_8ADBE(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">    v7 = (<span class="keyword">char</span> *)input[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( v29 &gt;= <span class="number">0x10</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v23 = v7;</span><br><span class="line">    <span class="keyword">if</span> ( v29 + <span class="number">1</span> &gt;= <span class="number">0x1000</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v7 = (<span class="keyword">char</span> *)*((_DWORD *)v7 - <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(v23 - v7 - <span class="number">4</span>) &gt; <span class="number">0x1F</span> )</span><br><span class="line">        _invalid_parameter_noinfo_noreturn();</span><br><span class="line">    &#125;</span><br><span class="line">    sub_864DE(v7);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是encrypt函数的伪代码，远不如main函数清晰，IDA对于函数参数的识别也不尽如人意，勉强可以看出text（即等待加密的数据）被传入了sub_82270这个函数，进入这个函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> __cdecl <span class="title">encrypt</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3, <span class="keyword">unsigned</span> <span class="keyword">int</span> a4, <span class="keyword">unsigned</span> <span class="keyword">int</span> a5)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int8 *v5; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v6; <span class="comment">// ebx</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 *text; <span class="comment">// esi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v8; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v9; <span class="comment">// esi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v10; <span class="comment">// edx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v11; <span class="comment">// esi</span></span><br><span class="line">  _DWORD *v12; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v13; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v14; <span class="comment">// ebx</span></span><br><span class="line">  <span class="keyword">char</span> *v15; <span class="comment">// esi</span></span><br><span class="line">  __m128i v16; <span class="comment">// xmm0</span></span><br><span class="line">  __m128i v17; <span class="comment">// xmm1</span></span><br><span class="line">  __m128i v18; <span class="comment">// xmm0</span></span><br><span class="line">  __m128i v19; <span class="comment">// xmm1</span></span><br><span class="line">  __m128i v20; <span class="comment">// xmm0</span></span><br><span class="line">  __m128i v21; <span class="comment">// xmm1</span></span><br><span class="line">  __m128i v22; <span class="comment">// xmm0</span></span><br><span class="line">  __m128i v23; <span class="comment">// xmm1</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v24; <span class="comment">// ebx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v25; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">char</span> *v26; <span class="comment">// esi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v27; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">int</span> v28; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">int</span> v29; <span class="comment">// [esp+20h] [ebp-20h]</span></span><br><span class="line">  <span class="keyword">int</span> v30; <span class="comment">// [esp+24h] [ebp-1Ch]</span></span><br><span class="line">  _DWORD *Block; <span class="comment">// [esp+28h] [ebp-18h]</span></span><br><span class="line">  <span class="keyword">int</span> v32[<span class="number">4</span>]; <span class="comment">// [esp+2Ch] [ebp-14h] BYREF</span></span><br><span class="line"></span><br><span class="line">  v6 = a5;</span><br><span class="line">  text = v5;</span><br><span class="line">  v8 = (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(a3 + <span class="number">31</span>) &gt;&gt; <span class="number">5</span>;</span><br><span class="line">  v30 = <span class="number">4</span> * v8;</span><br><span class="line">  Block = <span class="built_in">malloc</span>(<span class="number">4</span> * v8);</span><br><span class="line">  v32[<span class="number">0</span>] = <span class="number">-1839987866</span>;</span><br><span class="line">  v32[<span class="number">1</span>] = <span class="number">120</span>;</span><br><span class="line">  v32[<span class="number">2</span>] = <span class="number">-1839987866</span>;</span><br><span class="line">  v32[<span class="number">3</span>] = <span class="number">120</span>;</span><br><span class="line">  sub_82270(text, (<span class="keyword">unsigned</span> __int8 *)v32);</span><br><span class="line">  sub_820E0();</span><br><span class="line">  sub_82150();</span><br><span class="line">  sub_81F80();</span><br><span class="line">  v29 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( v8 )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">      dword_B0D94 = (<span class="number">2</span> * dword_B0DA4) ^ (<span class="keyword">unsigned</span> __int16)(dword_B0DBC ^ (<span class="number">2</span> * dword_B0DA4));</span><br><span class="line">      dword_B0D78 = (dword_B0DB8 &lt;&lt; <span class="number">16</span>) | ((<span class="keyword">unsigned</span> <span class="keyword">int</span>)dword_B0DAC &gt;&gt; <span class="number">15</span>);</span><br><span class="line">      v9 = (dword_B0D70 &lt;&lt; <span class="number">16</span>) | ((<span class="keyword">unsigned</span> <span class="keyword">int</span>)dword_B0D90 &gt;&gt; <span class="number">15</span>);</span><br><span class="line">      dword_B0D8C = (dword_B0D68 &lt;&lt; <span class="number">16</span>) | ((<span class="keyword">unsigned</span> <span class="keyword">int</span>)dword_B0D84 &gt;&gt; <span class="number">15</span>);</span><br><span class="line">      dword_B0D7C = v9;</span><br><span class="line">      Block[v29] = v9 ^ sub_82150();</span><br><span class="line">      sub_81F80();</span><br><span class="line">      ++v29;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> ( v29 &lt; (<span class="keyword">int</span>)v8 );</span><br><span class="line">    v6 = a5;</span><br><span class="line">  &#125;</span><br><span class="line">  v10 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( v8 )</span><br><span class="line">  &#123;</span><br><span class="line">    v11 = a4;</span><br><span class="line">    <span class="keyword">if</span> ( v8 &lt; <span class="number">0x10</span> || v6 &lt;= a4 + v30 - <span class="number">4</span> &amp;&amp; v6 + v30 - <span class="number">4</span> &gt;= a4 )</span><br><span class="line">    &#123;</span><br><span class="line">      v12 = Block;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      v12 = Block;</span><br><span class="line">      <span class="keyword">if</span> ( v6 &gt; (<span class="keyword">unsigned</span> <span class="keyword">int</span>)&amp;Block[v8 - <span class="number">1</span>] || v6 + v30 - <span class="number">4</span> &lt; (<span class="keyword">unsigned</span> <span class="keyword">int</span>)Block )</span><br><span class="line">      &#123;</span><br><span class="line">        v13 = a4 + <span class="number">16</span>;</span><br><span class="line">        v12 = Block;</span><br><span class="line">        v14 = v6 + <span class="number">32</span>;</span><br><span class="line">        v15 = (<span class="keyword">char</span> *)Block - a4;</span><br><span class="line">        <span class="keyword">do</span></span><br><span class="line">        &#123;</span><br><span class="line">          v16 = *(__m128i *)(v13 - <span class="number">16</span>);</span><br><span class="line">          v13 += <span class="number">64</span>;</span><br><span class="line">          v14 += <span class="number">64</span>;</span><br><span class="line">          v17 = _mm_xor_si128(*(__m128i *)&amp;Block[v10], v16);</span><br><span class="line">          v18 = *(__m128i *)(v13 - <span class="number">64</span>);</span><br><span class="line">          *(__m128i *)(v14 - <span class="number">96</span>) = v17;</span><br><span class="line">          v19 = _mm_xor_si128(*(__m128i *)&amp;v15[v13 - <span class="number">64</span>], v18);</span><br><span class="line">          v20 = *(__m128i *)(v13 - <span class="number">48</span>);</span><br><span class="line">          *(__m128i *)(a5 - a4 + v13 - <span class="number">64</span>) = v19;</span><br><span class="line">          v15 = (<span class="keyword">char</span> *)Block - a4;</span><br><span class="line">          v21 = _mm_xor_si128(*(__m128i *)((<span class="keyword">char</span> *)Block + v14 - a5 - <span class="number">64</span>), v20);</span><br><span class="line">          v22 = *(__m128i *)(v13 - <span class="number">32</span>);</span><br><span class="line">          *(__m128i *)(v14 - <span class="number">64</span>) = v21;</span><br><span class="line">          v23 = *(__m128i *)&amp;Block[v10 + <span class="number">12</span>];</span><br><span class="line">          v10 += <span class="number">16</span>;</span><br><span class="line">          *(__m128i *)(v14 - <span class="number">48</span>) = _mm_xor_si128(v23, v22);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> ( v10 &lt; (v8 &amp; <span class="number">0xFFFFFFF0</span>) );</span><br><span class="line">        v6 = a5;</span><br><span class="line">        v11 = a4;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( v10 &lt; v8 )</span><br><span class="line">    &#123;</span><br><span class="line">      v24 = v6 - a4;</span><br><span class="line">      v25 = v11 + <span class="number">4</span> * v10;</span><br><span class="line">      v26 = (<span class="keyword">char</span> *)v12 - a4;</span><br><span class="line">      v27 = v8 - v10;</span><br><span class="line">      <span class="keyword">do</span></span><br><span class="line">      &#123;</span><br><span class="line">        v28 = *(_DWORD *)&amp;v26[v25];</span><br><span class="line">        v25 += <span class="number">4</span>;</span><br><span class="line">        *(_DWORD *)(v24 + v25 - <span class="number">4</span>) = *(_DWORD *)(v25 - <span class="number">4</span>) ^ v28;</span><br><span class="line">        --v27;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span> ( v27 );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">free</span>(Block);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>sub_82270函数的伪代码，更是令人费解，甚至出现了或运算，这个运算一般是不可逆的！</p>
+<p>大致看了一下也不像是什么常见的加密算法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> __fastcall <span class="title">sub_82270</span><span class="params">(<span class="keyword">unsigned</span> __int8 *a1, <span class="keyword">unsigned</span> __int8 *a2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v2; <span class="comment">// esi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v3; <span class="comment">// ebx</span></span><br><span class="line">  <span class="keyword">int</span> v4; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">int</span> v6; <span class="comment">// edi</span></span><br><span class="line">  __int16 v7; <span class="comment">// cx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v8; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v9; <span class="comment">// edx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v10; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v11; <span class="comment">// edx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v12; <span class="comment">// esi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v13; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v14; <span class="comment">// ecx</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v15; <span class="comment">// edi</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v17; <span class="comment">// [esp+Ch] [ebp-38h]</span></span><br><span class="line">  <span class="keyword">int</span> v18; <span class="comment">// [esp+10h] [ebp-34h]</span></span><br><span class="line">  <span class="keyword">int</span> v19; <span class="comment">// [esp+14h] [ebp-30h]</span></span><br><span class="line">  <span class="keyword">int</span> v20; <span class="comment">// [esp+18h] [ebp-2Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v21; <span class="comment">// [esp+1Ch] [ebp-28h]</span></span><br><span class="line">  <span class="keyword">int</span> v22; <span class="comment">// [esp+20h] [ebp-24h]</span></span><br><span class="line">  <span class="keyword">int</span> v23; <span class="comment">// [esp+24h] [ebp-20h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v24; <span class="comment">// [esp+28h] [ebp-1Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v25; <span class="comment">// [esp+2Ch] [ebp-18h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v26; <span class="comment">// [esp+30h] [ebp-14h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v27; <span class="comment">// [esp+34h] [ebp-10h]</span></span><br><span class="line">  <span class="keyword">int</span> v28; <span class="comment">// [esp+38h] [ebp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v29; <span class="comment">// [esp+3Ch] [ebp-8h]</span></span><br><span class="line">  <span class="keyword">int</span> v30; <span class="comment">// [esp+40h] [ebp-4h]</span></span><br><span class="line"></span><br><span class="line">  v2 = *a2 | (*a1 &lt;&lt; <span class="number">23</span>) | <span class="number">0x44D700</span>;</span><br><span class="line">  v22 = a2[<span class="number">1</span>] | (a1[<span class="number">1</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x26BC00</span>;</span><br><span class="line">  v30 = a2[<span class="number">2</span>] | (a1[<span class="number">2</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x626B00</span>;</span><br><span class="line">  v21 = a2[<span class="number">3</span>] | (a1[<span class="number">3</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x135E00</span>;</span><br><span class="line">  v3 = a2[<span class="number">4</span>] | (a1[<span class="number">4</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x578900</span>;</span><br><span class="line">  v29 = a2[<span class="number">5</span>] | (a1[<span class="number">5</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x35E200</span>;</span><br><span class="line">  v20 = a2[<span class="number">6</span>] | (a1[<span class="number">6</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x713500</span>;</span><br><span class="line">  v28 = a2[<span class="number">7</span>] | (a1[<span class="number">7</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x9AF00</span>;</span><br><span class="line">  v19 = a2[<span class="number">8</span>] | (a1[<span class="number">8</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x4D7800</span>;</span><br><span class="line">  v27 = a2[<span class="number">9</span>] | (a1[<span class="number">9</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x2F1300</span>;</span><br><span class="line">  v26 = a2[<span class="number">10</span>] | (a1[<span class="number">10</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x6BC400</span>;</span><br><span class="line">  v25 = a2[<span class="number">11</span>] | (a1[<span class="number">11</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x1AF100</span>;</span><br><span class="line">  v18 = a2[<span class="number">12</span>] | (a1[<span class="number">12</span>] &lt;&lt; <span class="number">23</span>) | <span class="number">0x5E2600</span>;</span><br><span class="line">  v4 = a2[<span class="number">13</span>] | (a1[<span class="number">13</span>] &lt;&lt; <span class="number">23</span>);</span><br><span class="line">  dword_B0D9C = <span class="number">0</span>;</span><br><span class="line">  v24 = v4 | <span class="number">0x3C4D00</span>;</span><br><span class="line">  v5 = a2[<span class="number">14</span>] | (a1[<span class="number">14</span>] &lt;&lt; <span class="number">23</span>);</span><br><span class="line">  dword_B0DB4 = <span class="number">0</span>;</span><br><span class="line">  v23 = v5 | <span class="number">0x789A00</span>;</span><br><span class="line">  v6 = a1[<span class="number">15</span>];</span><br><span class="line">  v7 = v23;</span><br><span class="line">  v17 = <span class="number">32</span>;</span><br><span class="line">  v8 = a2[<span class="number">15</span>] | (v6 &lt;&lt; <span class="number">23</span>) | <span class="number">0x47AC00</span>;</span><br><span class="line">  <span class="keyword">do</span></span><br><span class="line">  &#123;</span><br><span class="line">    dword_B0D94 = (<span class="number">2</span> * v8) ^ (<span class="keyword">unsigned</span> __int16)(v7 ^ (<span class="number">2</span> * v8));</span><br><span class="line">    dword_B0D78 = (v27 &gt;&gt; <span class="number">15</span>) | (v25 &lt;&lt; <span class="number">16</span>);</span><br><span class="line">    dword_B0D8C = (v29 &gt;&gt; <span class="number">15</span>) | (v28 &lt;&lt; <span class="number">16</span>);</span><br><span class="line">    dword_B0D7C = (v2 &gt;&gt; <span class="number">15</span>) | (v30 &lt;&lt; <span class="number">16</span>);</span><br><span class="line">    v9 = ((v2 + (((v2 &lt;&lt; <span class="number">8</span>) | (v2 &gt;&gt; <span class="number">23</span>)) &amp; <span class="number">0x7FFFFFFF</span>)) &amp; <span class="number">0x7FFFFFFF</span>)</span><br><span class="line">       + ((v2 + (((v2 &lt;&lt; <span class="number">8</span>) | (v2 &gt;&gt; <span class="number">23</span>)) &amp; <span class="number">0x7FFFFFFF</span>)) &gt;&gt; <span class="number">31</span>)</span><br><span class="line">       + (((v3 &gt;&gt; <span class="number">11</span>) | (v3 &lt;&lt; <span class="number">20</span>)) &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">    v10 = (v9 &amp; <span class="number">0x7FFFFFFF</span>) + (v9 &gt;&gt; <span class="number">31</span>) + (((v26 &gt;&gt; <span class="number">10</span>) | (v26 &lt;&lt; <span class="number">21</span>)) &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">    v11 = (v10 &amp; <span class="number">0x7FFFFFFF</span>) + (v10 &gt;&gt; <span class="number">31</span>) + (((v24 &lt;&lt; <span class="number">17</span>) | (v24 &gt;&gt; <span class="number">14</span>)) &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">    v12 = (v11 &amp; <span class="number">0x7FFFFFFF</span>) + (v11 &gt;&gt; <span class="number">31</span>) + (((v8 &lt;&lt; <span class="number">15</span>) | HIWORD(v8)) &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">    v13 = (v12 &amp; <span class="number">0x7FFFFFFF</span>) + (v12 &gt;&gt; <span class="number">31</span>) + ((<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_82150() &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    v2 = v22;</span><br><span class="line">    v22 = v30;</span><br><span class="line">    dword_B0D88 = v30;</span><br><span class="line">    v30 = v21;</span><br><span class="line">    dword_B0D70 = v21;</span><br><span class="line">    v14 = v3;</span><br><span class="line">    v3 = v29;</span><br><span class="line">    v21 = v14;</span><br><span class="line">    dword_B0DB0 = v14;</span><br><span class="line">    v29 = v20;</span><br><span class="line">    dword_B0D84 = v20;</span><br><span class="line">    v20 = v28;</span><br><span class="line">    dword_B0D98 = v28;</span><br><span class="line">    v28 = v19;</span><br><span class="line">    dword_B0D68 = v19;</span><br><span class="line">    v19 = v27;</span><br><span class="line">    dword_B0D74 = v27;</span><br><span class="line">    v27 = v26;</span><br><span class="line">    dword_B0DAC = v26;</span><br><span class="line">    v26 = v25;</span><br><span class="line">    dword_B0D6C = v25;</span><br><span class="line">    v25 = v18;</span><br><span class="line">    dword_B0DB8 = v18;</span><br><span class="line">    v18 = v24;</span><br><span class="line">    dword_B0DA0 = v24;</span><br><span class="line">    v24 = v23;</span><br><span class="line">    dword_B0DA8 = v23;</span><br><span class="line">    v7 = v8;</span><br><span class="line">    v23 = v8;</span><br><span class="line">    v15 = v13 &gt;&gt; <span class="number">31</span>;</span><br><span class="line">    result = v13 &amp; <span class="number">0x7FFFFFFF</span>;</span><br><span class="line">    v8 = result + v15;</span><br><span class="line">    dword_B0DBC = v23;</span><br><span class="line">    --v17;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> ( v17 );</span><br><span class="line">  dword_B0DA4 = v8;</span><br><span class="line">  dword_B0D90 = v2;</span><br><span class="line">  dword_B0D80 = v3;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>像这种看起来很复杂，又不是常见的加密算法的，我们其实只需要关注数据的变化，使用内存硬件断点就可以达到这个目的</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217173021503.png" class="" title="image-20220217173021503">
+
+<p>先把程序跑起来，输入一串字符，最好有规律一点，这个题目会在输入后判断字符的长度是否为32，所以我们输入的长度要是32</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217173324894.png" class="" title="image-20220217173324894">
+
+<p>在这个循环中，将输入与一个常量字符串“SWPU_2019_CTF”循环异或</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217173539165.png" class="" title="image-20220217173539165">
+
+<p>异或后的数据保存在这里，第一个字符b是已经异或过的结果，在b的位置下一个硬件断点，按F2即可</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217173713068.png" class="" title="image-20220217173713068">
+
+<p>勾选上Hardware，因为是数据，所以下面的复选框中我们勾选Read和Write即可</p>
+<p>然后F9运行程序，断在了这里</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217173847732.png" class="" title="image-20220217173847732">
+
+<img src="/2022/02/17/SWPU2019wp/image-20220217173957563.png" class="" title="image-20220217173957563">
+
+<p>查看text的内存发现这里的操作是将异或后的数据拷贝到text中，所以在text的内存位置我们也要下一个硬件断点，之前下的那个硬件断点删不删都行</p>
+<p>再次F9运行程序，断在了这里</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217174255390.png" class="" title="image-20220217174255390">
+
+<p>这个循环将[eax-4]中的数据与ecx进行异或，查看内存发现[eax-4]的数据就是text的数据</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217174423037.png" class="" title="image-20220217174423037">
+
+<p>所以这个循环就是将text异或，然后存入[ebx+eax-4]的地址，在这里我们继续下一个硬件断点</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217174650793.png" class="" title="image-20220217174650793">
+
+<p>然后F9运行，程序断在这里：</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217174815088.png" class="" title="image-20220217174815088">
+
+<p>这里已经是最后比较数据的地方了，所以其实输出的数据只是经过了两次异或加密，那些复杂的算式可能只是为了产生异或的数据，有了这个猜测，我们可以在异或的地址处下断点，检查不同的输入是否会产生相同的异或数据</p>
+<p>第一次异或的数据是一个常量字符串，我们不用关心，第二次异或的数据我们倒是不清楚，所以在这里下一个断点</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217175155775.png" class="" title="image-20220217175155775">
+
+<p>然后运行两次，输入不同的数据</p>
+<img src="/2022/02/17/SWPU2019wp/image-20220217175314851.png" class="" title="image-20220217175314851">
+
+<img src="/2022/02/17/SWPU2019wp/image-20220217175404881.png" class="" title="image-20220217175404881">
+
+<p>查看两次运行的内存发现是一样的，所以异或的数据与我们的输入无关</p>
+<p>我们把异或的数据提取出来</p>
+<p><strong>[0x86, 0x0C, 0x3E, 0xCA, 0x98, 0xD7, 0xAE, 0x19, 0xE2, 0x77, 0x6B, 0xA6, 0x6A, 0xA1, 0x77, 0xB0, 0x69, 0x91, 0x37, 0x05, 0x7A, 0xF9, 0x7B, 0x30, 0x43, 0x5A, 0x4B, 0x10, 0x86, 0x7D, 0xD4, 0x28]</strong></p>
+<p>第一次异或的数据是常量字符串“SWPU_2019_CTF”</p>
+<p>比较的数据是：</p>
+<p><strong>[0xB3, 0x37, 0x0F, 0xF8, 0xBC, 0xBC, 0xAE, 0x5D, 0xBA, 0x5A, 0x4D, 0x86, 0x44, 0x97, 0x62, 0xD3, 0x4F, 0xBA, 0x24, 0x16, 0x0B, 0x9F, 0x72, 0x1A, 0x65, 0x68, 0x6D, 0x26, 0xBA, 0x6B, 0xC8, 0x67]</strong></p>
+<p>解密脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cmp = [<span class="number">0xB3</span>, <span class="number">0x37</span>, <span class="number">0x0F</span>, <span class="number">0xF8</span>, <span class="number">0xBC</span>, <span class="number">0xBC</span>, <span class="number">0xAE</span>, <span class="number">0x5D</span>, <span class="number">0xBA</span>, <span class="number">0x5A</span>, <span class="number">0x4D</span>, <span class="number">0x86</span>, <span class="number">0x44</span>, <span class="number">0x97</span>, <span class="number">0x62</span>, <span class="number">0xD3</span>, <span class="number">0x4F</span>, <span class="number">0xBA</span>, <span class="number">0x24</span>, <span class="number">0x16</span>, <span class="number">0x0B</span>, <span class="number">0x9F</span>, <span class="number">0x72</span>, <span class="number">0x1A</span>, <span class="number">0x65</span>, <span class="number">0x68</span>, <span class="number">0x6D</span>, <span class="number">0x26</span>, <span class="number">0xBA</span>, <span class="number">0x6B</span>, <span class="number">0xC8</span>, <span class="number">0x67</span>]</span><br><span class="line">xor_data2 = [<span class="number">0x86</span>, <span class="number">0x0C</span>, <span class="number">0x3E</span>, <span class="number">0xCA</span>, <span class="number">0x98</span>, <span class="number">0xD7</span>, <span class="number">0xAE</span>, <span class="number">0x19</span>, <span class="number">0xE2</span>, <span class="number">0x77</span>, <span class="number">0x6B</span>, <span class="number">0xA6</span>, <span class="number">0x6A</span>, <span class="number">0xA1</span>, <span class="number">0x77</span>, <span class="number">0xB0</span>, <span class="number">0x69</span>, <span class="number">0x91</span>, <span class="number">0x37</span>, <span class="number">0x05</span>, <span class="number">0x7A</span>, <span class="number">0xF9</span>, <span class="number">0x7B</span>, <span class="number">0x30</span>, <span class="number">0x43</span>, <span class="number">0x5A</span>, <span class="number">0x4B</span>, <span class="number">0x10</span>, <span class="number">0x86</span>, <span class="number">0x7D</span>, <span class="number">0xD4</span>, <span class="number">0x28</span>]</span><br><span class="line">xor_data1 = <span class="string">&quot;SWPU_2019_CTF&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cmp)):</span><br><span class="line">    cmp[i] ^= xor_data2[i]</span><br><span class="line">    cmp[i] ^= <span class="built_in">ord</span>(xor_data1[i % <span class="built_in">len</span>(xor_data1)])</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(cmp[i]), end=<span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/17/SWPU2019wp/image-20220217180301719.png" class="" title="image-20220217180301719">
+
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>当遇到加密函数很复杂而且不是常见的加密算法时，我们可以先使用硬件断点将输入的变化过程分析出来，这可以避免去分析一些与外部变量无关的代码，大大节省解题时间</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/03/C-%E9%80%86%E5%90%91%E5%88%86%E6%9E%90/" rel="prev" title="C++逆向分析">
+      <i class="fa fa-chevron-left"></i> C++逆向分析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
