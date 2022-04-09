@@ -145,6 +145,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/17/CSAPP%E7%AC%AC%E4%B8%89%E7%AB%A0%E5%B0%8F%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/17/CSAPP%E7%AC%AC%E4%B8%89%E7%AB%A0%E5%B0%8F%E7%BB%93/" class="post-title-link" itemprop="url">CSAPP第三章小结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-17 13:23:30 / Modified: 14:07:59" itemprop="dateCreated datePublished" datetime="2022-01-17T13:23:30+08:00">2022-01-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>第三章比较长，而且中间又去折腾pwn了，所以看了很久才看完，读书笔记也是看完了才写的，所以前面的一些东西也有些记不清了，书果然还是看了就忘，所以还是对了目录简单梳理一下，详细写有点不太可能，一是因为没有一边看一边做笔记的习惯，二是不好把握度，到最后难免就变成了抄书，所以只简单回顾一下</p>
+<p>这一章的主题其实就是汇编，所以读书笔记其实也就是聊一聊汇编</p>
+<p>汇编学习中几个重要的点：</p>
+<p>1、语法</p>
+<p>2、函数调用约定</p>
+<p>3、结构</p>
+<p>以及一个浮点数的相关知识，这个虽然独立出来讲，但是只要清楚整数的相关知识，浮点数的其实也是大同小异</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>这个不用说，给你一条汇编指令，你得知道这条指令是干什么的，这个主要靠积累，可以查阅官方文档或者去看别人的总结和举例</p>
+<p>常见的汇编指令：mov，lea，add，sub，xor，and，or，shr，shl，push，pop肯定是要会的，其他一些扩展指令能记住多少就记住多少，记不起来了就去查，没什么大碍</p>
+<p>再就是数据的格式，字节，字，双字，四字，以及其对应的寄存器</p>
+<h2 id="函数调用约定"><a href="#函数调用约定" class="headerlink" title="函数调用约定"></a>函数调用约定</h2><p>这部分需要掌握传参规则，栈帧的维护，返回值的处理，以及寄存器的保存</p>
+<p>32位下，参数一般通过栈传递，C的默认传参顺序是从后往前，返回值保存在eax中</p>
+<p>64位下，参数的前四个(linux是前六个)通过寄存器传递，从前往后依次是rdi，rsi，rdx，rcx，(r8，r9)，剩余的参数从后往前依次由栈传递，返回值保存在rax中</p>
+<p>再就是栈帧的维护，这个可以去翻一翻我以前的博客</p>
+<p>返回值的处理：整数一般直接放在rax中，如果有多个整数，会通过栈返回，浮点数一般保存在xmm0中，多个浮点数同整数，指针同整数</p>
+<p>寄存器的保存又分为调用者保存和被调用者保存，主要作用是防止因寄存器数量过少而导致数据覆写的丢失，就是暂时把寄存器的值保存在栈上，等需要用时再拿出来</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>这是汇编中最重要也是最难理解的一部分</p>
+<p>一是代码结构，需要明白汇编代码是如何组织来实现高级语言功能的，包括if语句，do-while语句，while语句，for语句，以及这些语句的嵌套</p>
+<p>我的做法是在阅读汇编代码是将其划分为小块，划分的依据可以是标识符、跳转指令，call指令，一部分一部分地理解，最后将他们组合起来</p>
+<p>二是数据结构，想数组，结构体，联合等，理解这些数据结构是如何创建和访问的</p>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><p>要知道浮点数有哪些操作(其实和整数差不多)，以及浮点数使用的寄存器</p>
+<p>浮点数的操作可以类比整数，无非就是取值，运算，存储，只是指令不同罢了</p>
+<p>浮点数使用xmm寄存器(其实整数也能用)，调用函数时，浮点参数依次放入xmm0到xmm7，浮点返回值存放在xmm0中</p>
+<h2 id="废话-小声bb"><a href="#废话-小声bb" class="headerlink" title="废话(小声bb)"></a>废话(小声bb)</h2><p>以后看书还得得一边做笔记，看完一章再来写其实前面的早忘了，写的马马虎虎，确实也不太喜欢看教材类的书</p>
+<p>汇编这一块其实是在炒冷饭了，《加密与解密》看了一遍，《C++反汇编与逆向工程揭秘》又看了一遍，但真要逆起来还是挺吃力地，动态还好，静态就真寄，还是的多看</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/16/C-%E5%BC%82%E5%B8%B8%E4%BC%AA%E4%BB%A3%E7%A0%81%E8%BF%98%E5%8E%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -964,96 +1047,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/08/%E6%89%8B%E5%8A%A8%E9%93%BE%E6%8E%A5%E7%A8%8B%E5%BA%8F%E6%97%A0%E6%B3%95%E6%89%A7%E8%A1%8C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/08/%E6%89%8B%E5%8A%A8%E9%93%BE%E6%8E%A5%E7%A8%8B%E5%BA%8F%E6%97%A0%E6%B3%95%E6%89%A7%E8%A1%8C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">手动链接程序无法执行的解决方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-08 16:34:04 / Modified: 16:57:07" itemprop="dateCreated datePublished" datetime="2021-12-08T16:34:04+08:00">2021-12-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>故事的经过是这样的：</p>
-<p>汇编：</p>
-<p><img src="image-20211208163757180.png" alt="image-20211208163757180"></p>
-<p>链接：</p>
-<p><img src="image-20211208163949344.png" alt="image-20211208163949344"></p>
-<p>运行：</p>
-<p><img src="image-20211208164022630.png" alt="image-20211208164022630"></p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>？？？</p>
-<p>待我ls一下：</p>
-<p><img src="image-20211208164109529.png" alt="image-20211208164109529"></p>
-<p>？？？？？？？？？？？？？？？</p>
-<p><img src="image-20211208164157049.png" alt="image-20211208164157049"></p>
-<p>？？？？？？？？？？？？？？？？？？？？？？？？？？？？逐渐诡异起来了</p>
-<p>难道链接器出问题了？试试ldd</p>
-<p><img src="image-20211208164354103.png" alt="image-20211208164354103"></p>
-<p>不太对劲起来了，用readelf看一下程序需要什么ld</p>
-<p><img src="image-20211208164458056.png" alt="image-20211208164458056"></p>
-<p>我们看到：[Requesting program interpreter: /lib/ld64.so.1]，程序需要<strong>ld64.so.1</strong>这个interpreter，可是我链接的时候用的是<strong>ld-linux-x86-64.so.2</strong>啊</p>
-<p>不对劲</p>
-<p><img src="image-20211208164712987.png" alt="image-20211208164712987"></p>
-<p>电脑里根本没有这个共享库，程序运行的时候要动态链接这个库，但是找不到，于是程序跑不起来</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>既然找不到这个共享库，那我们就把程序的interpreter换了，这里用到的是patchelf，网上有安装教程，最好自己下载官方的安装包进行安装，apt install的版本太老了</p>
-<p>把你想用的ld拖到同一目录下，这里我用的是<strong>ld-linux-x86-64.so.2</strong></p>
-<p>然后执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> patchelf --set-interpreter ld-linux-x86-64.so.2 11</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="image-20211208165219469.png" alt="image-20211208165219469"></p>
-<p>再次使用ldd和readelf查看程序</p>
-<p><img src="image-20211208165336965.png" alt="image-20211208165336965"></p>
-<p><img src="image-20211208165353446.png" alt="image-20211208165353446"></p>
-<p>这次应该刑了吧</p>
-<p><img src="image-20211208165433712.png" alt="image-20211208165433712"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1123,7 +1116,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
