@@ -145,6 +145,98 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/09/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4movs-lods-stos-rep/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/09/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4movs-lods-stos-rep/" class="post-title-link" itemprop="url">汇编指令movs, lods, stos, rep</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-12-09 14:37:00 / Modified: 15:40:07" itemprop="dateCreated datePublished" datetime="2021-12-09T14:37:00+08:00">2021-12-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前看ida的时候经常遇到这些指令，但是老是记不住，每次遇到了才去查，查了又忘</p>
+<p>最近一段时间在系统地学习汇编，搞好学到这里，就写一篇blog巩固一下，以后也方便查</p>
+<p>前三条指令本质上就是数据的转移指令，和mov是大同小异的，而最后一条rep是循环指令，可以联想英文单词repeat</p>
+<h2 id="movs"><a href="#movs" class="headerlink" title="movs"></a>movs</h2><p>movs又包含三条指令，movsb、movsw、movsd</p>
+<p>后缀b、w、d分别指byte， word，dword，即字节、字、双字，指明了操作的单位</p>
+<p>首先我们来看一下mov指令的格式：</p>
+<p>mov 目的操作数，源操作数（intel格式）</p>
+<p>mov指令会给出目的操作数和源操作数，指令的大概意思就是把源操作数移动到目的操作数</p>
+<p>但是movs不一样，movs不需要接目的操作数和源操作数，指令的格式是：</p>
+<p><strong>movsb</strong></p>
+<p><strong>movsw</strong></p>
+<p><strong>movsd</strong></p>
+<p>这样写的原因是movs的目的操作数和源操作数是隐式给出的，目的操作数存放在edi中，源操作数存放在esi中</p>
+<p>所以说，<strong>movsb</strong>相当于<strong>mov [edi], byte ptr [esi]</strong></p>
+<p>movsw，movsd以此类推</p>
+<p>每次执行movs指令，edi与esi都会发生相应的变化，要么变大要么变小，变大还是变小取决于DF标志位的值，0则变大，1则变小，变大或者变小的数值取决于源操作数的大小</p>
+<h2 id="lods"><a href="#lods" class="headerlink" title="lods"></a>lods</h2><p>movs是把一个内存空间的内容复制到另一片内存空间，而lods则是将内存空间的值复制到寄存器中</p>
+<p><strong>lodsb</strong></p>
+<p>这条指令表示将esi中的内容复制到eax中，复制的单位是字节</p>
+<p>lodsw、lodsd以此类推</p>
+<p>每次执行都会增加或减少esi的值，参照movs</p>
+<h2 id="stos"><a href="#stos" class="headerlink" title="stos"></a>stos</h2><p>stos与lods指令的行为相反，stosb代表吧eax的一个字节存到edi所指向的内存空间中去</p>
+<p>每次执行都会增加或减少edi的值，参照movs</p>
+<p>于是我们发现：movsb 等价于lodsb stosb</p>
+<h2 id="rep"><a href="#rep" class="headerlink" title="rep"></a>rep</h2><p>rep指令的格式是：</p>
+<p>rep 指令a</p>
+<p>rep会重复执行指令a，每次执行前是ecx的值减一，如果减去一以后ecx的值为0，则结束循环</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov $54, %ecx</span><br><span class="line">rep movsb</span><br></pre></td></tr></table></figure>
+
+<p>这条指令会重复执行54次</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>综合上面四条指令，我们可以写一个汇编程序来实现字符串的复制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">.extern printf</span><br><span class="line">.section .data</span><br><span class="line">mystr:</span><br><span class="line">    .ascii &quot;Hello World!\n&quot;</span><br><span class="line">end:</span><br><span class="line">    .byte 0</span><br><span class="line">.section .bss</span><br><span class="line">    .lcomm output1, 15</span><br><span class="line">    .lcomm output2, 15</span><br><span class="line">.section .text</span><br><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">    leal mystr, %esi</span><br><span class="line">    leal output1, %edi</span><br><span class="line">    cld #add esi and edi everytime</span><br><span class="line">    mov $13, %ecx</span><br><span class="line">    rep movsb</span><br><span class="line"></span><br><span class="line">    movl $end, %esi</span><br><span class="line">    lodsb</span><br><span class="line">    stosb #cut the string</span><br><span class="line"></span><br><span class="line">    leaq output1, %rdi</span><br><span class="line">    call printf</span><br><span class="line">    </span><br><span class="line">    movl $end, %esi</span><br><span class="line">    leal output2+14, %edi</span><br><span class="line">    std #sub esi and edi everytime</span><br><span class="line">    lodsb</span><br><span class="line">    stosb</span><br><span class="line">    leal mystr+13, %esi</span><br><span class="line">    mov $14, %ecx</span><br><span class="line">    rep movsb</span><br><span class="line"></span><br><span class="line">    cld #reset DF</span><br><span class="line"></span><br><span class="line">    movq $output2, %rdi</span><br><span class="line">    call printf</span><br><span class="line"></span><br><span class="line">    mov $60, %rax</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20211209153940491.png" alt="image-20211209153940491"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/08/%E6%89%8B%E5%8A%A8%E9%93%BE%E6%8E%A5%E7%A8%8B%E5%BA%8F%E6%97%A0%E6%B3%95%E6%89%A7%E8%A1%8C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -617,7 +709,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
